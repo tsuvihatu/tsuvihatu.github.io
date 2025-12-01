@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="ja" data-lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiro Tamiya</title>
+    <meta property="og:title" content="Shiro Tamiya | Quantum Information Scientist">
+    <meta property="og:type" content="website">    
+    <meta property="og:url" content="https://shirotamiya.com/">
+    <meta property="og:site_name" content="Shiro Tamiya"> 
+    <meta property="og:description" content="I am a researcher in the field of quantum computation and quantum information theory. My current work primarily focuses on Fault-Tolerant Quantum Computing (FTQC) and Quantum Error Correction (QEC).">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@300;400;500;600&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+        /* ===============================
+           Theme Variables
+        ================================ */
+        :root {
+            /* Dark mode (Default) */
+            --bg-color: #171717;
+            --bg-card: rgba(40, 40, 40, 0.6);
+            --text-main: #e5e5e5;
+            --text-muted: #a3a3a3;
+            --text-link: #fbbf24;
+            --border-color: #404040;
+            --accent-color: #f59e0b;
+            
+            /* Tag colors */
+            --tag-bg: rgba(64, 64, 64, 0.4);
+            --tag-border: var(--border-color);
+            --tag-text: #d4d4d4;
+            
+            --bg-gradient: radial-gradient(circle at 15% 0%, rgba(251, 191, 36, 0.04), transparent 45%),
+                           radial-gradient(circle at 85% 100%, rgba(245, 158, 11, 0.04), transparent 45%);
+            
+            --shadow-card: none;
+        }
+
+        :root[data-theme="light"] {
+            /* Light mode */
+            --bg-color: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --text-link: #0369a1; 
+            --border-color: #cbd5e1;
+            --accent-color: #0ea5e9;
+
+            /* Light mode tag colors */
+            --tag-bg: #e2e8f0; 
+            --tag-border: #94a3b8; 
+            --tag-text: #334155; 
+
+            --bg-gradient: radial-gradient(circle at 15% 0%, rgba(14, 165, 233, 0.08), transparent 40%),
+                           radial-gradient(circle at 85% 100%, rgba(99, 102, 241, 0.08), transparent 40%);
+
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.7;
+            font-weight: 300;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        /* Film grain noise overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Scroll reveal animation classes */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        a {
+            color: var(--text-link);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        /* ===============================
+           Header
+        ================================ */
+        .top-bar-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg-color);
+            background: color-mix(in srgb, var(--bg-color), transparent 10%);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-bar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+        }
+        .brand:hover { text-decoration: none; }
+        .brand:hover .brand-text { color: var(--text-main); }
+
+        .brand-logo {
+            width: 26px;
+            height: 26px;
+            position: relative;
+        }
+        .necker-face {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--text-main);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            background-color: transparent;
+        }
+        .necker-face:first-child {
+            top: 0; left: 0;
+            border-color: var(--accent-color);
+            z-index: 2;
+        }
+        .necker-face:last-child {
+            bottom: 0; right: 0;
+            border-color: var(--text-muted);
+            opacity: 0.7;
+            z-index: 1;
+        }
+        .brand:hover .necker-face:first-child {
+            transform: translate(8px, 8px);
+            border-color: var(--text-muted);
+            opacity: 0.7;
+            z-index: 1;
+        }
+        .brand:hover .necker-face:last-child {
+            transform: translate(-8px, -8px);
+            border-color: var(--accent-color);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .brand-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.02em;
+            line-height: 1;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 36px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .main-nav a { color: var(--text-muted); text-decoration: none; }
+        .main-nav a:hover { color: var(--text-main); }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 99px;
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            transform: rotate(15deg);
+        }
+
+        /* ===============================
+           Hero
+        ================================ */
+        .hero {
+            padding: 100px 0 20px;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .hero-avatar {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 24px;
+            margin-bottom: 32px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        :root[data-theme="light"] .hero-avatar {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: white;
+        }
+
+        .hero-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-weight: 400;
+            margin: 0 0 8px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-name-jp {
+            font-family: 'Shippori Mincho', "Yu Mincho", serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            letter-spacing: 0.15em;
+            opacity: 0.8;
+        }
+
+        .hero-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.6;
+        }
+
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px; 
+        }
+
+        .hero-aligned-block {
+            padding-left: 20px;
+            border-left: 3px solid transparent;
+        }
+
+        .hero-statement-ja {
+            font-size: 1.05rem;
+            margin: 0 0 24px 0;
+            line-height: 1.8;
+            font-weight: 500;
+            color: var(--text-main);
+            border-left-color: var(--accent-color);
+        }
+
+        .hero-statement-en {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .hero-tags-container {
+            margin-bottom: 40px;
+        }
+        .hero-tags-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            opacity: 0.6;
+            font-weight: 600;
+        }
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .hero-tag {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 99px;
+            background-color: var(--tag-bg);
+            border: 1px solid var(--tag-border);
+            color: var(--tag-text);
+            transition: all 0.2s;
+            cursor: default;
+            letter-spacing: 0.02em;
+        }
+        .hero-tag:hover {
+            border-color: var(--accent-color);
+            color: var(--text-main);
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            background-color: transparent;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .hero-social-link:hover {
+            background-color: var(--bg-card);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* ===============================
+           Common Sections
+        ================================ */
+        .section { padding: 100px 0 0; }
+        .section-header {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            position: relative;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin: 0;
+            position: relative;
+            padding-left: 20px;
+        }
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 3px; height: 24px;
+            background-color: var(--accent-color);
+            opacity: 0.8;
+        }
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: 'Manrope', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        /* ===============================
+           News
+        ================================ */
+        .news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--bg-card);
+        }
+
+        /* Custom Scrollbar for News List */
+        .news-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .news-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        .news-list::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 4px;
+        }
+        .news-list::-webkit-scrollbar-thumb:hover {
+            background-color: var(--accent-color);
+        }
+
+        .news-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-date {
+            font-family: 'Manrope', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .news-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .news-main-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .news-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .news-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap; /* Fix: Allow wrapping on small screens */
+        }
+        .news-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .news-link:hover {
+            color: var(--text-link);
+            text-decoration: underline;
+        }
+        .news-link i {
+            font-size: 0.8em;
+        }
+
+        /* ===============================
+           Biography
+        ================================ */
+        .bio-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        .bio-column h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .bio-list { list-style: none; padding: 0; margin: 0; }
+        .bio-item {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 24px;
+            border-left: 1px solid var(--border-color);
+        }
+        .bio-item:last-child { margin-bottom: 0; }
+        .bio-item::before {
+            content: "";
+            position: absolute;
+            left: -4px; top: 6px;
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--text-muted);
+        }
+        .bio-item:hover::before {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .bio-period {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            font-family: 'Manrope', monospace;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .bio-title { font-size: 1rem; font-weight: 500; color: var(--text-main); display: block; margin-bottom: 2px; }
+        .bio-org { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* ===============================
+           Research & Publications & Talks
+        ================================ */
+        .research-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .research-item {
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: var(--shadow-card);
+        }
+        
+        :root[data-theme="light"] .research-item {
+            border-color: transparent;
+        }
+
+        .research-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--text-muted);
+            background-color: var(--bg-card); 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+        }
+        .research-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin: 0 0 16px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .research-item h3 i { font-size: 0.7em; color: var(--accent-color); opacity: 0.8; }
+        .research-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.7; }
+        .research-bullets { padding-left: 1.2em; margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+        .research-bullets li { margin-bottom: 6px; }
+
+        .pub-list { list-style: none; padding: 0; margin: 0; }
+        .pub-item {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: start;
+            transition: opacity 0.2s;
+        }
+        .pub-list:hover .pub-item { opacity: 0.5; }
+        .pub-list:hover .pub-item:hover { opacity: 1; }
+        .pub-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 8px; display: block; color: var(--text-main); line-height: 1.4; }
+        .pub-authors { font-size: 0.95rem; color: var(--text-muted); }
+        .pub-meta-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .pub-journal { font-style: italic; color: var(--text-main); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+        .pub-year { font-size: 0.9rem; color: var(--text-muted); }
+        .pub-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+        .pub-tag { background-color: var(--bg-card); padding: 3px 10px; border-radius: 99px; font-size: 0.75rem; color: var(--text-muted); border: 1px solid var(--border-color); letter-spacing: 0.05em; text-transform: uppercase; }
+        .pub-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+        .pub-link { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; display: inline-block; font-weight: 600; }
+
+        .talk-subheading { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-muted); margin-top: 20px; margin-bottom: 10px; }
+        .talk-list { list-style: none; padding: 0; margin: 0; }
+        .talk-item { padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+        .talk-item:last-child { border-bottom: none; }
+        .talk-main { font-size: 1rem; font-weight: 500; }
+        .talk-year { font-family: 'Manrope', monospace; font-size: 0.8rem; color: var(--accent-color); margin-right: 10px; }
+        .talk-meta { margin-top: 4px; font-size: 0.9rem; color: var(--text-muted); }
+        
+        /* Author names in talks */
+        .talk-authors {
+            margin-top: 2px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic; /* Default for English names */
+        }
+        /* Override for Japanese names to prevent italics */
+        .talk-authors.ja {
+            font-style: normal;
+        }
+
+        .contact-row { 
+            display: flex; 
+            gap: 60px; 
+            padding: 40px; 
+            background-color: var(--bg-card); 
+            border-radius: 12px; 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--shadow-card);
+        }
+        
+        :root[data-theme="light"] .contact-row {
+            border-color: transparent;
+        }
+
+        .contact-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin: 0 0 16px; }
+        .contact-col p { margin: 0; font-size: 1rem; }
+        .footer { margin-top: 100px; padding-top: 24px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+        /* ===============================
+           Responsive
+        ================================ */
+        @media (max-width: 900px) {
+            .shell { padding-inline: 24px; }
+            .top-bar { padding-inline: 24px; }
+            .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+            
+            .hero-left {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .hero-right {
+                padding-top: 0;
+            }
+
+            .hero-statement-ja br {
+                display: none;
+            }
+
+            .bio-container { grid-template-columns: 1fr; gap: 40px; }
+            .research-grid { grid-template-columns: 1fr; }
+            .pub-item { grid-template-columns: 1fr; gap: 12px; }
+
+            /* Fix: Mobile layout for publications */
+            .pub-meta-side { 
+                text-align: left; 
+                align-items: flex-start;
+                flex-direction: column;
+                width: 100%; 
+                gap: 8px;
+                justify-content: flex-start; 
+            }
+            .pub-links, .pub-tags { justify-content: flex-start; }
+
+            .contact-row { flex-direction: column; gap: 40px; }
+            .section-header { flex-direction: column; gap: 8px; }
+            
+            .hero-name { font-size: 3rem; }
+            
+            .hero-aligned-block { padding-left: 0; border-left: none; }
+            .hero-statement-ja { padding-left: 16px; border-left-width: 3px; }
+
+            /* Fix: Center social icons on mobile */
+            .hero-actions { justify-content: center; margin-top: 10px; }
+        }
+
+        @media (max-width: 600px) {
+            .main-nav { display: none; }
+            
+            .news-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            /* Fix: Prevent scroll trap in news */
+            .news-list {
+                max-height: none;
+                overflow-y: visible;
+                padding-right: 0;
+            }
+
+            /* Fix: Center footer on mobile */
+            .footer {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar-wrap">
+    <header class="top-bar">
+        <a href="#" class="brand">
+            <div class="brand-logo">
+                <div class="necker-face"></div>
+                <div class="necker-face"></div>
+            </div>
+            <div class="brand-text">Shiro Tamiya</div>
+        </a>
+        <nav class="main-nav">
+            <a href="#about">About</a>
+            <a href="#news">News</a>
+            <a href="#biography">Bio</a>
+            <a href="#research">Research</a>
+            <a href="#publications">Publications</a>
+            <a href="#talks">Talks</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <i class="fa-regular fa-moon"></i>
+        </button>
+    </header>
+</div>
+
+<main class="shell">
+
+    <section class="hero" id="about">
+        <div class="hero-inner">
+            <div class="hero-left">
+                <img src="./profile.jpg" alt="Shiro Tamiya" class="hero-avatar">
+                
+                <h1 class="hero-name">Shiro Tamiya</h1>
+                <div class="hero-name-jp">田宮 志郎</div>
+                
+                <div class="hero-role">
+                    Quantum Information Scientist<br>
+                    Theory Group, NanoQT
+                </div>
+            </div>
+            
+            <div class="hero-right">
+                <p class="hero-statement-ja hero-aligned-block">
+                    誤り耐性量子計算 (FTQC) と量子誤り訂正 (QEC) を中心に、<br>
+                    量子計算・量子情報理論の研究に取り組んでいます。
+                </p>
+
+                <p class="hero-statement-en hero-aligned-block">
+                    I am a researcher in the field of quantum computation and quantum information theory. My current work primarily focuses on Fault-Tolerant Quantum Computing (FTQC) and Quantum Error Correction (QEC).
+                </p>
+
+                <div class="hero-tags-container hero-aligned-block">
+                    <div class="hero-tags-label">Focus Areas</div>
+                    <div class="hero-tags">
+                        <span class="hero-tag">Fault-Tolerant Quantum Computation</span>
+                        <span class="hero-tag">Quantum Error Correction</span>
+                        <span class="hero-tag">Quantum Algorithms</span>
+                    </div>
+                </div>
+
+                <div class="hero-actions hero-socials hero-aligned-block">
+                    <a href="mailto:shiro.tamiya01@gmail.com" class="hero-social-link" aria-label="Email">
+                        <i class="fa-regular fa-envelope"></i>
+                    </a>
+                    <a href="https://scholar.google.co.jp/citations?user=2JmONA8AAAAJ" class="hero-social-link" aria-label="Google Scholar" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </a>
+                    <a href="https://x.com/Shiro_Tamiya" class="hero-social-link" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/shiro-tamiya-3055011a4" class="hero-social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="news">
+        <div class="section-header">
+            <h2 class="section-title">News</h2>
+            <div class="section-subtitle">Updates</div>
+        </div>
+        <ul class="news-list">
+            <li class="news-item">
+                <div class="news-date">2025.12</div>
+                    <div class="news-content">
+                        <div class="news-main-text">Invited talk at QEC Theory Workshop for Young Researchers</div>
+                        <div class="news-sub">
+                            名古屋大学にて開催される
+                            「量子誤り訂正理論 若手ワークショップ
+                            (Quantum Error Correction Theory Workshop for Young Researchers)」
+                            で講演を行う予定です。
+                        </div>
+                        <div class="news-links">
+                            <a href="https://sites.google.com/view/qecminiworkshopjp2025/" class="news-link" target="_blank" rel="noopener noreferrer">
+                                <i class="fa-solid fa-globe"></i> Workshop
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="news-item">
+                <div class="news-date">2025.11</div>
+                <div class="news-content">
+                    <div class="news-main-text">Published in Nature Physics</div>
+                    <div class="news-sub">
+                        “Fault-tolerant quantum computation with polylogarithmic time and constant space overheads” が Nature Physics から出版されました。
+                    </div>
+                    <div class="news-links">
+                        <a href="https://www.nature.com/articles/s41567-025-03102-5" class="news-link" target="_blank">
+                            <i class="fa-solid fa-file-lines"></i> Article
+                        </a>
+                        <a href="https://www.t.u-tokyo.ac.jp/press/pr2025-11-26-002" class="news-link" target="_blank">
+                            <i class="fa-solid fa-bullhorn"></i> Press Release
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="news-item">
+                <div class="news-date">2025.10</div>
+                <div class="news-content">
+                    <div class="news-main-text">New preprint on decoding of quantum LDPC codes</div>
+                    <div class="news-sub">
+                        “Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum LDPC Codes” を arXiv にアップロードしました。
+                    </div>
+                    <div class="news-links">
+                        <a href="https://arxiv.org/abs/2510.08695" class="news-link" target="_blank">
+                            <i class="fa-solid fa-file-pdf"></i> arXiv
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="news-item">
+                <div class="news-date">2025.09</div>
+                <div class="news-content">
+                    <div class="news-main-text">Best Paper Award at TQC 2025</div>
+                    <div class="news-sub">
+                        “Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes” が TQC 2025 Best Paper Award を受賞しました。
+                    </div>
+                    <div class="news-links">
+                        <a href="https://tqc-conference.org/" class="news-link" target="_blank">
+                            <i class="fa-solid fa-globe"></i> TQC 2025
+                        </a>
+                        <a href="https://arxiv.org/abs/2411.03683" class="news-link" target="_blank">
+                            <i class="fa-solid fa-file-pdf"></i> arXiv
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    
+    <section class="section" id="biography">
+        <div class="section-header">
+            <h2 class="section-title">Biography</h2>
+            <div class="section-subtitle">Experience & Education</div>
+        </div>
+        <div class="bio-container">
+            <div class="bio-column">
+                <h3>Experience</h3>
+                <ul class="bio-list">
+                    <li class="bio-item">
+                        <span class="bio-period">2024.04 – Present</span>
+                        <span class="bio-title">Research Scientist</span>
+                        <span class="bio-org">Nanofiber Quantum Technologies (NanoQT), Theory Group</span>
+                    </li>
+                    <li class="bio-item">
+                        <span class="bio-period">2024.05 – Present</span>
+                        <span class="bio-title">Visiting Researcher</span>
+                        <span class="bio-org">The University of Tokyo</span>
+                    </li>
+                    <li class="bio-item">
+                        <span class="bio-period">2022.04 – 2024.03</span>
+                        <span class="bio-title">JSPS Research Fellow (DC2)</span>
+                        <span class="bio-org">Japan Society for the Promotion of Science</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bio-column">
+                <h3>Education</h3>
+                <ul class="bio-list">
+                    <li class="bio-item">
+                        <span class="bio-period">2021.04 – 2024.03</span>
+                        <span class="bio-title">Ph.D. in Physics</span>
+                        <span class="bio-org">The University of Tokyo (Supervisor: Prof. Masato Koashi)</span>
+                    </li>
+                    <li class="bio-item">
+                        <span class="bio-period">2019.04 – 2021.03</span>
+                        <span class="bio-title">M.S. in Physics</span>
+                        <span class="bio-org">The University of Tokyo (Supervisor: Prof. Masato Koashi)</span>
+                    </li>
+                    <li class="bio-item">
+                        <span class="bio-period">2015.04 – 2019.03</span>
+                        <span class="bio-title">B.S. in Physics</span>
+                        <span class="bio-org">Yokohama National University</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="research">
+        <div class="section-header">
+            <h2 class="section-title">Research</h2>
+            <div class="section-subtitle">Focus Areas</div>
+        </div>
+        <div class="research-grid">
+            <div class="research-item">
+                <h3><i class="fa-solid fa-microchip"></i> Fault-tolerant quantum computation</h3>
+                <p class="research-desc">
+                    ノイズに堅牢な量子計算を実現する誤り耐性量子計算の理論構築
+                </p>
+            </div>
+            <div class="research-item">
+                <h3><i class="fa-solid fa-shield-halved"></i> Quantum error-correcting codes</h3>
+                <p class="research-desc">
+                    高性能な量子誤り訂正符号の設計と解析
+                </p>
+            </div>
+            <div class="research-item">
+                <h3><i class="fa-solid fa-sliders"></i> Quantum algorithms & optimization</h3>
+                <p class="research-desc">
+                    量子アルゴリズムの設計と最適化手法の開発
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="publications">
+        <div class="section-header">
+            <h2 class="section-title">Publications</h2>
+            <div class="section-subtitle">Journal Articles & Preprints</div>
+        </div>
+        <ul class="pub-list">
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Fault-tolerant quantum computation with polylogarithmic time and constant space overheads</span>
+                    <div class="pub-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">Nature Physics</div>
+                    <div class="pub-year">2025</div>
+                    <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">QLDPC codes</span><span class="pub-tag">Concatenated codes</span></div>
+                    <div class="pub-links">
+                        <a href="https://www.nature.com/articles/s41567-025-03102-5" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2411.03683" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum Low-Density Parity-Check Codes</span>
+                    <div class="pub-authors">Kento Tsubouchi, Hayata Yamasaki, Shiro Tamiya</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">arXiv:2510.08695</div>
+                    <div class="pub-year">2025 (preprint)</div>
+                    <div class="pub-tags"><span class="pub-tag">QLDPC codes</span><span class="pub-tag">Decoder</span></div>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2510.08695" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Concatenate codes, save qubits</span>
+                    <div class="pub-authors">Satoshi Yoshida, Shiro Tamiya, Hayata Yamasaki</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">npj Quantum Information 11, 88</div>
+                    <div class="pub-year">2025</div>
+                    <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">Concatenated codes</span></div>
+                    <div class="pub-links">
+                        <a href="https://www.nature.com/articles/s41534-025-01035-8" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2402.09606" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Scalable Networking of Neutral-Atom Qubits: Nanofiber-Based Approach for Multiprocessor Fault-Tolerant Quantum Computer</span>
+                    <div class="pub-authors">Shinichi Sunami, Shiro Tamiya, Ryotaro Inoue, Hayata Yamasaki, Akihisa Goban</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">PRX Quantum 6, 010101</div>
+                    <div class="pub-year">2025</div>
+                    <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">Neutral atoms</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.1103/PRXQuantum.6.010101" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2407.11111" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Low-depth random Clifford circuits for quantum coding against Pauli noise using a tensor-network decoder</span>
+                    <div class="pub-authors">Andrew S. Darmawan, Yoshifumi Nakata, Shiro Tamiya, Hayata Yamasaki</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">Physical Review Research 6, 023055</div>
+                    <div class="pub-year">2024</div>
+                    <div class="pub-tags"><span class="pub-tag">QEC</span><span class="pub-tag">Randomness</span><span class="pub-tag">Tensor network</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.1103/PhysRevResearch.6.023055" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2212.05071" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Stochastic gradient line Bayesian optimization for efficient noise-robust optimization of parameterized quantum circuits</span>
+                    <div class="pub-authors">Shiro Tamiya, Hayata Yamasaki</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">npj Quantum Information 8, 90</div>
+                    <div class="pub-year">2022</div>
+                    <div class="pub-tags"><span class="pub-tag">VQA</span><span class="pub-tag">Optimization</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.1038/s41534-022-00592-6" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2111.07952" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Calculating nonadiabatic couplings and Berry's phase by variational quantum eigensolvers</span>
+                    <div class="pub-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">Physical Review Research 3, 023244</div>
+                    <div class="pub-year">2021</div>
+                    <div class="pub-tags"><span class="pub-tag">VQE</span><span class="pub-tag">Quantum chemistry</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.1103/PhysRevResearch.3.023244" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2003.01706" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Qulacs: a fast and versatile quantum circuit simulator for research purpose</span>
+                    <div class="pub-authors">Yasunari Suzuki, Yoshiaki Kawase, Yuya Masumura, Yuria Hiraga, Masahiro Nakadai, Jiabao Chen, Ken M Nakanishi, Kosuke Mitarai, Ryosuke Imai, Shiro Tamiya, Takahiro Yamamoto, Tennin Yan, Toru Kawakubo, Yuya O Nakagawa, Yohei Ibe, Youyuan Zhang, Hirotsugu Yamashita, Hikaru Yoshimura, Akihiro Hayashi, Keisuke Fujii</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">Quantum 5, 559</div>
+                    <div class="pub-year">2021</div>
+                    <div class="pub-tags"><span class="pub-tag">Quantum circuit simulator</span><span class="pub-tag">Software</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.22331/q-2021-10-06-559" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2011.13524" class="pub-link" target="_blank">arXiv</a>
+                        <a href="https://github.com/qulacs/qulacs" class="pub-link" target="_blank">Github</a>
+                    </div>
+                </div>
+            </li>
+            <li class="pub-item">
+                <div class="pub-main">
+                    <span class="pub-title">Quantum circuits for exact unitary t-designs and applications to higher-order randomized benchmarking</span>
+                    <div class="pub-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
+                </div>
+                <div class="pub-meta-side">
+                    <div class="pub-journal">PRX Quantum 2, 030339</div>
+                    <div class="pub-year">2021</div>
+                    <div class="pub-tags"><span class="pub-tag">Randomness</span><span class="pub-tag">Benchmarking</span></div>
+                    <div class="pub-links">
+                        <a href="https://doi.org/10.1103/PRXQuantum.2.030339" class="pub-link" target="_blank">Journal</a>
+                        <a href="https://arxiv.org/abs/2102.12617" class="pub-link" target="_blank">arXiv</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <section class="section" id="talks">
+        <div class="section-header">
+            <h2 class="section-title">Talks</h2>
+            <div class="section-subtitle">Invited & Conference Presentations</div>
+        </div>
+
+        <div class="talk-subheading">International conferences & workshops</div>
+        <ul class="talk-list">
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2025</span>
+                    Fault-tolerant quantum computation with polylogarithmic time and constant space overheads
+                </div>
+                <div class="talk-meta">
+                    Quantum Error Correction Theory Workshop for Young Researchers,
+                    Nagoya University, Japan, December 17–19, 2025 (invited talk)
+                    <div class="talk-authors">
+                        Shiro Tamiya
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2025</span>
+                    Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
+                </div>
+                <div class="talk-meta">
+                    20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India, September 15–19, 2025 (Best Paper Award)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Masato Koashi, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2025</span>
+                    Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
+                </div>
+                <div class="talk-meta">
+                    7th International Conference on Quantum Error Correction (QEC25), Connecticut, United States, August 11–15, 2025
+                    <div class="talk-authors">
+                        Shiro Tamiya, Masato Koashi, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2024</span>
+                    Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
+                </div>
+                <div class="talk-meta">
+                    24th Asian Quantum Information Science Conference (AQIS 2024), Hokkaido University, Japan, August 26–30, 2024
+                    <div class="talk-authors">
+                        Shiro Tamiya, Masato Koashi, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2023</span>
+                    Quantum coding with random Clifford circuits
+                </div>
+                <div class="talk-meta">
+                    QEC Workshop 2023, Yukawa Institute for Theoretical Physics (YITP), Kyoto University, Japan, March 20–31, 2023
+                    <div class="talk-authors">
+                        Shiro Tamiya, Andrew S. Darmawan, Yoshifumi Nakata, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2022</span>
+                    Stochastic Gradient Line Bayesian Optimization: Efficient Noise-Robust Optimization for Parameterized Quantum Circuits
+                </div>
+                <div class="talk-meta">
+                    Quantum Information Processing and Quantum Machine Learning (QIP-QML 2022), IQOQI Vienna, Austrian Academy of Sciences, February 21 - March 11, 2022 (invited talk)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2022</span>
+                    Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Optimizing Parameterized Quantum Circuits
+                </div>
+                <div class="talk-meta">
+                    4th International Workshop on Quantum Resource Estimation (QRE 2022), New York, USA, June 18, 2022 (invited talk)
+                    <div class="talk-authors">
+                        Hayata Yamasaki, Shiro Tamiya
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2022</span>
+                    Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms
+                </div>
+                <div class="talk-meta">
+                    APS March Meeting 2022, Chicago, USA, March 14-18, 2022 (contributed talk)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms
+                </div>
+                <div class="talk-meta">
+                    21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021 (contributed talk)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Hayata Yamasaki
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking
+                </div>
+                <div class="talk-meta">
+                    21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021 (contributed talk)
+                    <div class="talk-authors">
+                        Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking (contributed talk)
+                </div>
+                <div class="talk-meta">
+                    16th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2021), University of Latvia, Riga, Latvia (Online), July 5–8, 2021
+                    <div class="talk-authors">
+                        Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    Calculating nonadiabatic couplings by variational quantum eigensolvers
+                </div>
+                <div class="talk-meta">
+                    Pacifichem 2021, Online, December 16–21, 2021 (poster)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Sho Koh, Yuya O. Nakagawa
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2020</span>
+                    Variational quantum algorithms for calculating nonadiabatic couplings
+                </div>
+                <div class="talk-meta">
+                    15th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2020), Online, June 9–12, 2020 (poster)
+                    <div class="talk-authors">
+                        Shiro Tamiya, Sho Koh, Yuya O. Nakagawa
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="talk-subheading">Seminars</div>
+        <ul class="talk-list">
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2025</span>
+                    Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
+                </div>
+                <div class="talk-meta">
+                    ICEPP seminar, The University of Tokyo, October 9, 2025
+                    <div class="talk-authors ja">
+                        Shiro Tamiya
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2025</span>
+                    Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
+                </div>
+                <div class="talk-meta">
+                    QunaSys internal seminar, オンライン, 2024年12月13日 
+                    <div class="talk-authors ja">
+                        田宮 志郎
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2024</span>
+                    Concatenate codes, save qubits
+                </div>
+                <div class="talk-meta">
+                    第64回 Q-LEAP 量子 AI セミナー, オンライン, 2024年7月16日 (招待講演)
+                    <div class="talk-authors ja">
+                        田宮 志郎
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2024</span>
+                    低オーバーヘッド誤り耐性量子計算
+                </div>
+                <div class="talk-meta">
+                    QIH・MS6・Q-LEAP サマースクール 2024, サンライズ九十九里 (招待講演・講師)
+                    <div class="talk-authors ja">
+                        田宮 志郎
+                    </div>
+                </div>
+            </li>
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2024</span>
+                    量子 LDPC 符号と量子計算への応用
+                </div>
+                <div class="talk-meta">
+                    エクスパンダーグラフの新しい構成手法の確立とその応用 3, 九州大学, 2024/09/09–11 (招待講演)
+                    <div class="talk-authors ja">
+                        田宮 志郎
+                    </div>
+                </div>
+            </li>
+           <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2024</span>
+                    定数空間オーバーヘッド誤り耐性量子計算
+                </div>
+                <div class="talk-meta">
+                    第35回量子情報関東Student Chapter 研究会, 東京大学 本郷キャンパス, 2024年3月29日
+                    <div class="talk-authors ja">
+                        田宮 志郎
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="talk-subheading">Domestic conferences</div>
+        <ul class="talk-list">
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2023</span>
+                    測定誘起相転移の体積則相におけるランダム量子回路の誤り訂正能力
+                </div>
+                <div class="talk-meta">
+                    日本物理学会 第78回年次大会, 16aB204, 東北大学, 2023年9月
+                    <div class="talk-authors ja">
+                        田宮 志郎, 中田 芳史
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2023</span>
+                    ゼロ磁場ダイヤモンド NV 中心における弱結合核スピン検出・操作手法の研究
+                </div>
+                <div class="talk-meta">
+                    第18回ナノテク交流シンポジウム, 横浜国立大学, 2023年3月7日
+                    <div class="talk-authors ja">
+                        江川 直也, 田宮 志郎, 渡辺 幹成, 小坂 英男
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    Decoupling approach に基づく低深度量子ランダム符号の性能評価
+                </div>
+                <div class="talk-meta">
+                    日本物理学会 第77回年次大会, 15pE11, オンライン, 2021年3月
+                    <div class="talk-authors ja">
+                        田宮 志郎, Andrew S. Darmawan, 山崎 隼汰, 中田 芳史
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    確率的勾配方向ベイズ最適化による変分量子アルゴリズムに必要な測定回数の削減
+                </div>
+                <div class="talk-meta">
+                    日本物理学会 第76回年次大会, 15aA1-7, オンライン, 2021年3月
+                    <div class="talk-authors ja">
+                        田宮 志郎, 山崎 隼汰
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2021</span>
+                    確率的勾配方向ベイズ最適化に基づく変分量子アルゴリズムの測定回数の削減
+                </div>
+                <div class="talk-meta">
+                    量子情報春の学校2021, ポスター発表, オンライン開催, 2021年3月26日〜28日
+                    （ポスターセッション: 2021年3月27日）
+                    <div class="talk-authors ja">
+                        田宮 志郎, 山崎 隼汰
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2020</span>
+                    NISQ 上での非断熱結合計算
+                </div>
+                <div class="talk-meta">
+                    日本物理学会 第75回年次大会, 17pK33-4, オンライン, 2020年3月
+                    <div class="talk-authors ja">
+                        田宮 志郎, 中川 裕也
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2019</span>
+                    ダイヤモンド NV 中心による量子情報デバイスの実現に向けたハミルトニアンラーニング
+                </div>
+                <div class="talk-meta">
+                    第66回応用物理学会春季学術講演会, 9p-M111-6, 東京工業大学 大岡山キャンパス, 2019年3月9日
+                    <div class="talk-authors ja">
+                        田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男
+                    </div>
+                </div>
+            </li>
+
+            <li class="talk-item">
+                <div class="talk-main">
+                    <span class="talk-year">2019</span>
+                    機械学習によるダイヤモンド NV 中心ハミルトニアン推定
+                </div>
+                <div class="talk-meta">
+                    第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日
+                    <div class="talk-authors ja">
+                        田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </section>
+
+    <section class="section" id="contact">
+        <div class="section-header">
+            <h2 class="section-title">Contact</h2>
+        </div>
+        <div class="contact-row">
+            <div class="contact-col">
+                <h4>Email</h4>
+                <p><a href="mailto:shiro.tamiya01@gmail.com">shiro.tamiya01[@]gmail.com</a></p>
+            </div>
+            <div class="contact-col">
+                <h4>Affiliation</h4>
+                <p>
+                    Research Scientist, Theory Group,<br>
+                    Nanofiber Quantum Technologies (NanoQT)<br>
+                    Visiting Researcher, The University of Tokyo
+                </p>
+            </div>
+            <div class="contact-col">
+                <h4>Links</h4>
+                <p>
+                    <a href="https://scholar.google.co.jp/citations?user=2JmONA8AAAAJ" target="_blank" rel="noopener noreferrer" style="margin-right:12px">Google Scholar</a>
+                    <a href="https://arxiv.org/search/?searchtype=author&amp;query=Tamiya%2C+S" target="_blank" rel="noopener noreferrer" style="margin-right:12px">arXiv</a>
+                    <a href="https://orcid.org/0000-0001-7171-1713" target="_blank" rel="noopener noreferrer" style="margin-right:12px">ORCID</a>
+                    <a href="https://x.com/Shiro_Tamiya" target="_blank" rel="noopener noreferrer" style="margin-right:12px">X</a>
+                    <a href="https://www.linkedin.com/in/shiro-tamiya-3055011a4" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div>&copy; <span id="year-span">2025</span> Shiro Tamiya</div>
+        <div>Last update: 2025-11-28</div>
+    </footer>
+
+</main>
+
+<script>
+    // Set Current Year
+    document.getElementById('year-span').textContent = new Date().getFullYear();
+
+    // Theme Toggle Logic
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const icon = toggle.querySelector('i');
+
+    function setTheme(theme) {
+        if (theme === 'light') {
+            root.setAttribute('data-theme', 'light');
+            icon.className = 'fa-regular fa-moon';
+        } else {
+            root.removeAttribute('data-theme');
+            icon.className = 'fa-regular fa-sun';
+        }
+        localStorage.setItem('theme', theme);
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(stored || (prefersDark ? 'dark' : 'light'));
+
+    // Scroll Reveal Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const targets = document.querySelectorAll('.hero-left, .hero-right, .section-header, .news-item, .bio-container, .research-item, .pub-item, .talk-item, .contact-row');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(revealCallback, observerOptions);
+
+        targets.forEach(el => {
+            el.classList.add('reveal-on-scroll');
+            observer.observe(el);
+        });
+    });
+</script>
+
+</body>
+</html>
