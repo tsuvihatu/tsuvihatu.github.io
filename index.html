@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" data-lang="ja">
+<html lang="ja" data-lang="ja" data-theme="dark">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JZ1L7RWMLF"></script>
 <script>
@@ -10,6 +10,18 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0f1115">
+  <script>
+    /* Dark theme is the default; honour a saved preference before first paint. */
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light') { document.documentElement.removeAttribute('data-theme'); }
+        else { document.documentElement.setAttribute('data-theme', 'dark'); }
+      } catch (e) {}
+    })();
+  </script>
   <meta name="description" content="量子誤り訂正符号を中心に、量子計算・量子情報理論の研究に取り組んでいます。">
   <title>Shiro Tamiya — The University of Tokyo</title>
   <link rel="icon" href="./icon.png" type="image/png">
@@ -28,9 +40,12 @@
 
   <style>
     /* ===============================
-       Theme variables (light default)
+       Theme variables
+       (dark is the default; data-theme is
+        removed for the light theme)
     ================================ */
     :root {
+      color-scheme: light;
       --bg:          #ffffff;
       --bg-soft:     #fafaf9;
       --text:        #18181b;
@@ -43,9 +58,19 @@
       --tag-bg:      #f4f4f5;
       --tag-text:    #3f3f46;
       --shadow:      0 1px 2px rgba(15, 23, 42, 0.04);
+
+      /* research figures */
+      --fig-ink:      #27272a;
+      --fig-accent:   #1e3a8a;
+      --fig-warm:     #d97706;
+      --fig-fill:     #ffffff;
+      --fig-region-q: rgba(113, 113, 122, 0.10);
+      --fig-region-z: rgba(30, 58, 138, 0.09);
+      --fig-region-x: rgba(217, 119, 6, 0.12);
     }
 
     :root[data-theme="dark"] {
+      color-scheme: dark;
       --bg:          #0f1115;
       --bg-soft:     #15181d;
       --text:        #e7e5e4;
@@ -58,6 +83,14 @@
       --tag-bg:      #1c1f25;
       --tag-text:    #d4d4d8;
       --shadow:      none;
+
+      --fig-ink:      #d4d4d8;
+      --fig-accent:   #93c5fd;
+      --fig-warm:     #fbbf24;
+      --fig-fill:     #0f1115;
+      --fig-region-q: rgba(228, 228, 231, 0.07);
+      --fig-region-z: rgba(147, 197, 253, 0.14);
+      --fig-region-x: rgba(251, 191, 36, 0.13);
     }
 
     * { box-sizing: border-box; }
@@ -371,6 +404,38 @@
     /* ===============================
        News
     ================================ */
+    .news-scroll-wrap { position: relative; }
+    .news-scroll {
+      max-height: 456px;              /* about three items */
+      overflow-y: auto;
+      padding-right: 18px;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      overscroll-behavior: contain;
+    }
+    .news-scroll::-webkit-scrollbar { width: 6px; }
+    .news-scroll::-webkit-scrollbar-track { background: transparent; }
+    .news-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .news-scroll-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 18px; bottom: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .news-scroll-wrap.at-end::after { opacity: 0; }
+    .news-scroll-hint {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: right;
+    }
     .news-list { list-style: none; padding: 0; margin: 0; }
     .news-item {
       display: grid;
@@ -449,38 +514,126 @@
     .bio-org { font-size: 0.88rem; color: var(--text-muted); }
 
     /* ===============================
-       Research
+       Research (three themes, one card each;
+       the figure lives inside the card)
     ================================ */
-    .research-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+    .research-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
     }
-    .research-item {
-      padding: 28px 26px;
+    .research-card {
       border: 1px solid var(--border);
       background: var(--bg-soft);
       border-radius: 6px;
+      padding: 30px 32px 30px;
     }
-    .research-item h3 {
+    .research-card-head { margin-bottom: 22px; }
+    .research-index {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 10px;
+    }
+    .research-index::before {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .research-title {
       font-family: 'EB Garamond', serif;
-      font-size: 1.25rem;
+      font-size: 1.55rem;
       font-weight: 500;
-      margin: 0 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin: 0 0 4px;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
     }
-    .research-item h3 i {
-      font-size: 0.75em;
-      color: var(--accent);
-    }
-    .research-desc {
+    .research-title-ja {
+      font-family: 'Shippori Mincho', "Yu Mincho", serif;
       font-size: 0.92rem;
       color: var(--text-muted);
-      margin: 0;
-      line-height: 1.7;
+      letter-spacing: 0.08em;
     }
+
+    .research-card-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 36px;
+      align-items: center;
+    }
+    .research-card--figure-left .research-figure { order: -1; }
+
+    /* wide variant (the logical circuit): figure across the card, bilingual text below */
+    .research-card--wide .research-card-body { grid-template-columns: 1fr; gap: 26px; }
+    .research-card--wide .research-figure { order: -1; }
+    .research-card--wide .research-text {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0 44px;
+      align-items: start;
+    }
+    .research-card--wide .research-desc-ja { margin-bottom: 0; }
+
+    .research-figure {
+      margin: 0;
+      min-width: 0;
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 6px;
+      padding: 22px 22px 14px;
+    }
+    .research-figure .fig {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 390px;
+    }
+    .research-card--wide .research-figure .fig { max-height: none; }
+    .research-figure figcaption {
+      margin-top: 12px;
+      font-size: 0.76rem;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    .research-text { min-width: 0; }
+    .research-desc-ja {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+    .research-desc-en {
+      font-size: 0.86rem;
+      line-height: 1.7;
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    /* figure primitives (colours follow the theme) */
+    .fig .fg-wire      { stroke: var(--fig-ink); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .fig .fg-wire-thin { stroke-width: 1.5; }
+    .fig .fg-box       { fill: var(--fig-fill); stroke: var(--fig-ink); stroke-width: 2; }
+    .fig .fg-text      { fill: var(--fig-ink); font-family: 'EB Garamond', 'Times New Roman', serif; font-weight: 500; }
+    .fig .fg-italic    { font-style: italic; font-weight: 400; }
+    .fig .fg-sub       { font-style: normal; }
+    .fig .fg-bar       { stroke: var(--fig-ink); stroke-width: 1.6; stroke-linecap: round; }
+    .fig .fg-dot       { fill: var(--fig-ink); }
+    .fig .fg-bolt      { fill: var(--fig-warm); stroke: var(--fig-fill); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }
+    .fig .fg-edge      { fill: none; stroke: var(--fig-ink); stroke-width: 1.1; opacity: 0.38; }
+    .fig .fg-edge-strong { opacity: 0.62; stroke-width: 1.3; }
+    .fig .fg-q         { fill: var(--fig-accent); }
+    .fig .fg-x         { fill: var(--fig-warm); }
+    .fig .fg-region-q  { fill: var(--fig-region-q); }
+    .fig .fg-region-z  { fill: var(--fig-region-z); }
+    .fig .fg-region-x  { fill: var(--fig-region-x); }
+    .fig .fg-tint      { fill: var(--fig-accent); }
 
     /* ===============================
        Publications
@@ -674,6 +827,17 @@
       flex-wrap: wrap;
     }
 
+    .talk-links { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+    .talk-main-en {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    /* soften the embedded map in the dark theme */
+    :root[data-theme="dark"] .contact-map iframe {
+      filter: invert(0.92) hue-rotate(180deg) saturate(0.75) brightness(0.95);
+    }
+
     /* ===============================
        Responsive
     ================================ */
@@ -685,7 +849,16 @@
       .hero-avatar { margin: 0 auto; width: 150px; height: 150px; }
       .hero-socials { justify-content: center; }
       .bio-container { grid-template-columns: 1fr; gap: 36px; }
-      .research-grid { grid-template-columns: 1fr; }
+      .research-card { padding: 22px 18px 22px; }
+      .research-card-body { grid-template-columns: 1fr; gap: 20px; }
+      .research-card-body .research-figure { order: -1; }
+      .research-card--wide .research-text { grid-template-columns: 1fr; }
+      .research-card--wide .research-desc-ja { margin-bottom: 12px; }
+      .research-figure { padding: 16px 14px 12px; }
+      /* keep the wide circuit legible on phones: scroll it sideways */
+      .research-figure--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .research-figure--scroll .fig { min-width: 640px; }
+      .news-scroll { max-height: 480px; }
       .pub-item { grid-template-columns: 1fr; gap: 14px; }
       .pub-meta-side { text-align: left; align-items: flex-start; }
       .pub-tags, .pub-links { justify-content: flex-start; }
@@ -715,13 +888,12 @@
     </a>
     <nav class="tab-nav" role="tablist" aria-label="Sections">
       <button class="tab-link" data-tab="home"         role="tab">Home</button>
-      <button class="tab-link" data-tab="biography"    role="tab">Biography</button>
       <button class="tab-link" data-tab="publications" role="tab">Publications</button>
       <button class="tab-link" data-tab="talks"        role="tab">Talks</button>
       <button class="tab-link" data-tab="contact"      role="tab">Contact</button>
     </nav>
     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-      <i class="fa-regular fa-moon"></i>
+      <i class="fa-regular fa-sun"></i>
     </button>
   </header>
 </div>
@@ -751,9 +923,10 @@
 
         <div class="hero-tags-label">Focus Areas</div>
         <div class="hero-tags">
+          <span class="hero-tag">Fault-Tolerant Quantum Computation</span>
           <span class="hero-tag">Quantum Error Correction</span>
-          <span class="hero-tag">Quantum Computation</span>
-          <span class="hero-tag">Many-body physics</span>
+          <span class="hero-tag">Quantum Randomness</span>
+          <span class="hero-tag">Many-body Physics</span>
         </div>
 
         <div class="hero-socials">
@@ -779,7 +952,23 @@
         <h2 class="home-section-title">News</h2>
         <span class="home-section-label">Updates</span>
       </div>
+    <div class="news-scroll-wrap">
+    <div class="news-scroll" id="news-scroll" tabindex="0" aria-label="News (scrollable)">
     <ul class="news-list">
+      <li class="news-item">
+        <div class="news-date">2026.09</div>
+        <div class="news-content">
+          <div class="news-main-text">New preprint on coherent-error thresholds</div>
+          <div class="news-sub">
+            "Proof of a positive coherent-error threshold for topological quantum codes" を arXiv にアップロードしました。表面符号を含むトポロジカル符号に対して、コヒーレントな Z 回転エラーに関する閾値の存在を証明しました。
+          </div>
+          <div class="news-links">
+            <a href="https://arxiv.org/abs/2609.20708" class="news-link" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-file-pdf"></i> arXiv
+            </a>
+          </div>
+        </div>
+      </li>
       <li class="news-item">
         <div class="news-date">2026.06</div>
         <div class="news-content">
@@ -854,36 +1043,16 @@
       </li>
     </ul>
     </div>
+    </div>
+    <div class="news-scroll-hint">Scroll for older updates</div>
+    </div>
 
-    <!-- Research (inside Home) -->
+    <!-- Biography (inside Home) -->
     <div class="home-section">
       <div class="home-section-header">
-        <h2 class="home-section-title">Research</h2>
-        <span class="home-section-label">Focus Areas</span>
+        <h2 class="home-section-title">Biography</h2>
+        <span class="home-section-label">Experience &amp; Education</span>
       </div>
-      <div class="research-grid">
-        <div class="research-item">
-          <h3><i class="fa-solid fa-microchip"></i> Fault-tolerant quantum computation</h3>
-          <p class="research-desc">ノイズに堅牢な量子計算を実現する誤り耐性量子計算の理論構築。</p>
-        </div>
-        <div class="research-item">
-          <h3><i class="fa-solid fa-shield-halved"></i> Quantum error-correcting codes</h3>
-          <p class="research-desc">高性能な量子誤り訂正符号の設計と解析。</p>
-        </div>
-        <div class="research-item">
-          <h3><i class="fa-solid fa-sliders"></i> Quantum algorithms &amp; optimization</h3>
-          <p class="research-desc">量子アルゴリズムの設計と最適化手法の開発。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BIOGRAPHY -->
-  <section class="tab-panel" id="panel-biography" data-panel="biography" role="tabpanel">
-    <div class="section-header">
-      <h2 class="section-title">Biography</h2>
-      <div class="section-subtitle">Experience &amp; Education</div>
-    </div>
     <div class="bio-container">
       <div class="bio-column">
         <h3>Experience</h3>
@@ -931,6 +1100,634 @@
         </ul>
       </div>
     </div>
+    </div>
+
+    <!-- Research (inside Home) -->
+    <div class="home-section">
+      <div class="home-section-header">
+        <h2 class="home-section-title">Research</h2>
+        <span class="home-section-label">Three Themes</span>
+      </div>
+      <div class="research-list">
+
+        <article class="research-card research-card--wide">
+          <div class="research-card-head">
+            <div class="research-index">01 &nbsp;FTQC</div>
+            <h3 class="research-title">Fault-tolerant quantum computation</h3>
+            <div class="research-title-ja">誤り耐性量子計算</div>
+          </div>
+          <div class="research-card-body">
+            <div class="research-text">
+              <p class="research-desc-ja">
+                ノイズのある量子デバイス上で、任意に長い量子計算を信頼性高く実行するための理論を構築しています。量子 LDPC 符号や連接符号を用いて、空間・時間オーバーヘッドの小さい誤り耐性プロトコルを設計し、その閾値定理を厳密に証明することに取り組んでいます。
+              </p>
+              <p class="research-desc-en">
+                Building the theory of reliable quantum computation on noisy hardware: designing fault-tolerant protocols with low space and time overheads based on quantum LDPC codes and concatenated codes, and rigorously proving threshold theorems for them.
+              </p>
+            </div>
+            <figure class="research-figure research-figure--scroll">
+<svg class="fig fig-circuit" viewBox="0 0 1440 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig1-title" preserveAspectRatio="xMidYMid meet">
+<title id="fig1-title">Fault-tolerant logical circuit with error-correction gadgets</title>
+<defs><path id="bolt" d="M20 0 L6 24 L15 24 L10 44 L30 18 L20 18 Z"/></defs>
+<line class="fg-wire" x1="92" y1="62" x2="1346" y2="62"/>
+<line class="fg-wire" x1="92" y1="128" x2="1346" y2="128"/>
+<line class="fg-wire" x1="92" y1="194" x2="1346" y2="194"/>
+<line class="fg-wire" x1="92" y1="260" x2="1346" y2="260"/>
+<line class="fg-wire" x1="92" y1="326" x2="1346" y2="326"/>
+<line class="fg-wire" x1="92" y1="392" x2="1346" y2="392"/>
+<line class="fg-wire" x1="92" y1="458" x2="1346" y2="458"/>
+<line class="fg-wire" x1="583" y1="62" x2="583" y2="128"/>
+<line class="fg-wire" x1="583" y1="194" x2="583" y2="260"/>
+<line class="fg-wire" x1="583" y1="326" x2="583" y2="392"/>
+<line class="fg-wire" x1="845" y1="128" x2="845" y2="194"/>
+<line class="fg-wire" x1="845" y1="260" x2="845" y2="326"/>
+<line class="fg-wire" x1="845" y1="392" x2="845" y2="458"/>
+<line class="fg-wire" x1="47" y1="48" x2="47" y2="76"/>
+<text class="fg-text" x="62" y="72.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="45" x2="69" y2="45"/>
+<polyline class="fg-wire" points="75,48 82,62 75,76"/>
+<line class="fg-wire" x1="47" y1="114" x2="47" y2="142"/>
+<text class="fg-text" x="62" y="138.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="111" x2="69" y2="111"/>
+<polyline class="fg-wire" points="75,114 82,128 75,142"/>
+<line class="fg-wire" x1="47" y1="180" x2="47" y2="208"/>
+<text class="fg-text" x="62" y="204.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="177" x2="69" y2="177"/>
+<polyline class="fg-wire" points="75,180 82,194 75,208"/>
+<line class="fg-wire" x1="47" y1="246" x2="47" y2="274"/>
+<text class="fg-text" x="62" y="270.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="243" x2="69" y2="243"/>
+<polyline class="fg-wire" points="75,246 82,260 75,274"/>
+<line class="fg-wire" x1="47" y1="312" x2="47" y2="340"/>
+<text class="fg-text" x="62" y="336.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="309" x2="69" y2="309"/>
+<polyline class="fg-wire" points="75,312 82,326 75,340"/>
+<line class="fg-wire" x1="47" y1="378" x2="47" y2="406"/>
+<text class="fg-text" x="62" y="402.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="375" x2="69" y2="375"/>
+<polyline class="fg-wire" points="75,378 82,392 75,406"/>
+<line class="fg-wire" x1="47" y1="444" x2="47" y2="472"/>
+<text class="fg-text" x="62" y="468.5" font-size="30" text-anchor="middle">0</text>
+<line class="fg-bar" x1="55" y1="441" x2="69" y2="441"/>
+<polyline class="fg-wire" points="75,444 82,458 75,472"/>
+<rect class="fg-box" x="134" y="39" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="71.5" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="105" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="137.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="171" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="203.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="237" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="269.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="303" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="335.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="369" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="401.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="134" y="435" width="112" height="46" rx="3"/>
+<text class="fg-text" x="190" y="467.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="39" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="71.5" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="105" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="137.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="171" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="203.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="237" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="269.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="303" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="335.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="369" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="401.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="396" y="435" width="112" height="46" rx="3"/>
+<text class="fg-text" x="452" y="467.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="39" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="71.5" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="105" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="137.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="171" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="203.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="237" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="269.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="303" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="335.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="369" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="401.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="658" y="435" width="112" height="46" rx="3"/>
+<text class="fg-text" x="714" y="467.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="39" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="71.5" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="105" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="137.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="171" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="203.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="237" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="269.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="303" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="335.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="369" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="401.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="920" y="435" width="112" height="46" rx="3"/>
+<text class="fg-text" x="976" y="467.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="39" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="71.5" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="105" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="137.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="171" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="203.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="237" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="269.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="303" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="335.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="369" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="401.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="1182" y="435" width="112" height="46" rx="3"/>
+<text class="fg-text" x="1238" y="467.4" font-size="27" text-anchor="middle">EC</text>
+<rect class="fg-box" x="296" y="39" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="71.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="47" x2="329" y2="47"/>
+<rect class="fg-box" x="1082" y="39" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="71.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="47" x2="1115" y2="47"/>
+<rect class="fg-box" x="296" y="105" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="137.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="113" x2="329" y2="113"/>
+<rect class="fg-box" x="1082" y="105" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="137.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="113" x2="1115" y2="113"/>
+<rect class="fg-box" x="296" y="171" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="203.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="179" x2="329" y2="179"/>
+<rect class="fg-box" x="1082" y="171" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="203.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="179" x2="1115" y2="179"/>
+<rect class="fg-box" x="296" y="237" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="269.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="245" x2="329" y2="245"/>
+<rect class="fg-box" x="1082" y="237" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="269.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="245" x2="1115" y2="245"/>
+<rect class="fg-box" x="296" y="303" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="335.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="311" x2="329" y2="311"/>
+<rect class="fg-box" x="1082" y="303" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="335.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="311" x2="1115" y2="311"/>
+<rect class="fg-box" x="296" y="369" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="401.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="377" x2="329" y2="377"/>
+<rect class="fg-box" x="1082" y="369" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="401.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="377" x2="1115" y2="377"/>
+<rect class="fg-box" x="296" y="435" width="50" height="46" rx="3"/>
+<text class="fg-text" x="321" y="467.8" font-size="28" text-anchor="middle">T</text><line class="fg-bar" x1="313" y1="443" x2="329" y2="443"/>
+<rect class="fg-box" x="1082" y="435" width="50" height="46" rx="3"/>
+<text class="fg-text" x="1107" y="467.8" font-size="28" text-anchor="middle">H</text><line class="fg-bar" x1="1099" y1="443" x2="1115" y2="443"/>
+<circle class="fg-dot" cx="583" cy="62" r="6.5"/>
+<rect class="fg-box" x="558" y="105" width="50" height="46" rx="3"/>
+<text class="fg-text" x="583" y="137.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="575" y1="113" x2="591" y2="113"/>
+<circle class="fg-dot" cx="583" cy="194" r="6.5"/>
+<rect class="fg-box" x="558" y="237" width="50" height="46" rx="3"/>
+<text class="fg-text" x="583" y="269.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="575" y1="245" x2="591" y2="245"/>
+<circle class="fg-dot" cx="583" cy="326" r="6.5"/>
+<rect class="fg-box" x="558" y="369" width="50" height="46" rx="3"/>
+<text class="fg-text" x="583" y="401.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="575" y1="377" x2="591" y2="377"/>
+<circle class="fg-dot" cx="845" cy="128" r="6.5"/>
+<rect class="fg-box" x="820" y="171" width="50" height="46" rx="3"/>
+<text class="fg-text" x="845" y="203.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="837" y1="179" x2="853" y2="179"/>
+<circle class="fg-dot" cx="845" cy="260" r="6.5"/>
+<rect class="fg-box" x="820" y="303" width="50" height="46" rx="3"/>
+<text class="fg-text" x="845" y="335.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="837" y1="311" x2="853" y2="311"/>
+<circle class="fg-dot" cx="845" cy="392" r="6.5"/>
+<rect class="fg-box" x="820" y="435" width="50" height="46" rx="3"/>
+<text class="fg-text" x="845" y="467.8" font-size="28" text-anchor="middle">X</text><line class="fg-bar" x1="837" y1="443" x2="853" y2="443"/>
+<path class="fg-box" d="M1346 42 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="69.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="58.5" x2="1432" y2="58.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="65.5" x2="1432" y2="65.5"/>
+<path class="fg-box" d="M1346 108 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="135.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="124.5" x2="1432" y2="124.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="131.5" x2="1432" y2="131.5"/>
+<path class="fg-box" d="M1346 174 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="201.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="190.5" x2="1432" y2="190.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="197.5" x2="1432" y2="197.5"/>
+<path class="fg-box" d="M1346 240 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="267.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="256.5" x2="1432" y2="256.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="263.5" x2="1432" y2="263.5"/>
+<path class="fg-box" d="M1346 306 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="333.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="322.5" x2="1432" y2="322.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="329.5" x2="1432" y2="329.5"/>
+<path class="fg-box" d="M1346 372 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="399.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="388.5" x2="1432" y2="388.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="395.5" x2="1432" y2="395.5"/>
+<path class="fg-box" d="M1346 438 h26 a20 20 0 0 1 0 40 h-26 z"/>
+<text class="fg-text" x="1367" y="465.7" font-size="22" text-anchor="middle">Z</text>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="454.5" x2="1432" y2="454.5"/>
+<line class="fg-wire fg-wire-thin" x1="1392" y1="461.5" x2="1432" y2="461.5"/>
+<use class="fg-bolt" href="#bolt" transform="translate(852 56) rotate(-22) translate(-20 -22)"/>
+<use class="fg-bolt" href="#bolt" transform="translate(428 312) rotate(-22) translate(-20 -22)"/>
+<use class="fg-bolt" href="#bolt" transform="translate(1112 312) rotate(-22) translate(-20 -22)"/>
+<use class="fg-bolt" href="#bolt" transform="translate(64 380) rotate(-22) translate(-20 -22)"/>
+<use class="fg-bolt" href="#bolt" transform="translate(590 444) rotate(-22) translate(-20 -22)"/>
+</svg>
+              <figcaption>誤り訂正ガジェット (EC) を挟みながら論理ゲート T̄, CNOT, H̄ を実行し Z 測定で終わる誤り耐性回路。稲妻は物理エラーを表す。</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article class="research-card">
+          <div class="research-card-head">
+            <div class="research-index">02 &nbsp;QEC</div>
+            <h3 class="research-title">Quantum error-correcting codes</h3>
+            <div class="research-title-ja">量子誤り訂正符号</div>
+          </div>
+          <div class="research-card-body">
+            <div class="research-text">
+              <p class="research-desc-ja">
+                少ない物理量子ビットで多くの論理量子ビットを守れる高性能な量子誤り訂正符号を設計・解析しています。ハイパーグラフ積符号をはじめとする量子 LDPC 符号の構成、コヒーレントエラーなど現実的なノイズに対する閾値の解析、Belief Propagation 復号の効率的な後処理法などを研究しています。
+              </p>
+              <p class="research-desc-en">
+                Designing and analysing high-performance quantum error-correcting codes: hypergraph-product and other quantum LDPC codes, their thresholds under realistic noise such as coherent errors, and efficient decoders including post-processing for belief-propagation decoding.
+              </p>
+            </div>
+            <figure class="research-figure">
+<svg class="fig fig-hgp" viewBox="0 0 860 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig2-title" preserveAspectRatio="xMidYMid meet">
+<title id="fig2-title">Hypergraph-product construction of a quantum LDPC code</title>
+<rect class="fg-region-q" x="159" y="134" width="372" height="372" rx="12"/>
+<rect class="fg-region-z" x="576" y="134" width="222" height="372" rx="12"/>
+<rect class="fg-region-x" x="159" y="554" width="372" height="222" rx="12"/>
+<rect class="fg-region-q" x="576" y="554" width="222" height="222" rx="12"/>
+<path class="fg-edge fg-edge-strong" d="M195 62 Q403.5 2.5 612 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 170 Q32.2 380 92 590"/>
+<path class="fg-edge fg-edge-strong" d="M195 62 Q478.5 -11 762 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 170 Q18.7 455 92 740"/>
+<path class="fg-edge fg-edge-strong" d="M270 62 Q441 9.2 612 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 245 Q39 417.5 92 590"/>
+<path class="fg-edge fg-edge-strong" d="M270 62 Q478.5 2.5 687 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 245 Q32.2 455 92 665"/>
+<path class="fg-edge fg-edge-strong" d="M345 62 Q516 9.2 687 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 320 Q39 492.5 92 665"/>
+<path class="fg-edge fg-edge-strong" d="M345 62 Q553.5 2.5 762 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 320 Q32.2 530 92 740"/>
+<path class="fg-edge fg-edge-strong" d="M420 62 Q516 22.7 612 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 395 Q52.5 492.5 92 590"/>
+<path class="fg-edge fg-edge-strong" d="M420 62 Q591 9.2 762 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 395 Q39 567.5 92 740"/>
+<path class="fg-edge fg-edge-strong" d="M495 62 Q591 22.7 687 62"/>
+<path class="fg-edge fg-edge-strong" d="M92 470 Q52.5 567.5 92 665"/>
+<path class="fg-edge" d="M195 170 Q403.5 110.5 612 170"/>
+<path class="fg-edge" d="M195 170 Q478.5 97 762 170"/>
+<path class="fg-edge" d="M270 170 Q441 117.2 612 170"/>
+<path class="fg-edge" d="M270 170 Q478.5 110.5 687 170"/>
+<path class="fg-edge" d="M345 170 Q516 117.2 687 170"/>
+<path class="fg-edge" d="M345 170 Q553.5 110.5 762 170"/>
+<path class="fg-edge" d="M420 170 Q516 130.7 612 170"/>
+<path class="fg-edge" d="M420 170 Q591 117.2 762 170"/>
+<path class="fg-edge" d="M495 170 Q591 130.7 687 170"/>
+<path class="fg-edge" d="M195 245 Q403.5 185.5 612 245"/>
+<path class="fg-edge" d="M195 245 Q478.5 172 762 245"/>
+<path class="fg-edge" d="M270 245 Q441 192.2 612 245"/>
+<path class="fg-edge" d="M270 245 Q478.5 185.5 687 245"/>
+<path class="fg-edge" d="M345 245 Q516 192.2 687 245"/>
+<path class="fg-edge" d="M345 245 Q553.5 185.5 762 245"/>
+<path class="fg-edge" d="M420 245 Q516 205.7 612 245"/>
+<path class="fg-edge" d="M420 245 Q591 192.2 762 245"/>
+<path class="fg-edge" d="M495 245 Q591 205.7 687 245"/>
+<path class="fg-edge" d="M195 320 Q403.5 260.5 612 320"/>
+<path class="fg-edge" d="M195 320 Q478.5 247 762 320"/>
+<path class="fg-edge" d="M270 320 Q441 267.2 612 320"/>
+<path class="fg-edge" d="M270 320 Q478.5 260.5 687 320"/>
+<path class="fg-edge" d="M345 320 Q516 267.2 687 320"/>
+<path class="fg-edge" d="M345 320 Q553.5 260.5 762 320"/>
+<path class="fg-edge" d="M420 320 Q516 280.7 612 320"/>
+<path class="fg-edge" d="M420 320 Q591 267.2 762 320"/>
+<path class="fg-edge" d="M495 320 Q591 280.7 687 320"/>
+<path class="fg-edge" d="M195 395 Q403.5 335.5 612 395"/>
+<path class="fg-edge" d="M195 395 Q478.5 322 762 395"/>
+<path class="fg-edge" d="M270 395 Q441 342.2 612 395"/>
+<path class="fg-edge" d="M270 395 Q478.5 335.5 687 395"/>
+<path class="fg-edge" d="M345 395 Q516 342.2 687 395"/>
+<path class="fg-edge" d="M345 395 Q553.5 335.5 762 395"/>
+<path class="fg-edge" d="M420 395 Q516 355.7 612 395"/>
+<path class="fg-edge" d="M420 395 Q591 342.2 762 395"/>
+<path class="fg-edge" d="M495 395 Q591 355.7 687 395"/>
+<path class="fg-edge" d="M195 470 Q403.5 410.5 612 470"/>
+<path class="fg-edge" d="M195 470 Q478.5 397 762 470"/>
+<path class="fg-edge" d="M270 470 Q441 417.2 612 470"/>
+<path class="fg-edge" d="M270 470 Q478.5 410.5 687 470"/>
+<path class="fg-edge" d="M345 470 Q516 417.2 687 470"/>
+<path class="fg-edge" d="M345 470 Q553.5 410.5 762 470"/>
+<path class="fg-edge" d="M420 470 Q516 430.7 612 470"/>
+<path class="fg-edge" d="M420 470 Q591 417.2 762 470"/>
+<path class="fg-edge" d="M495 470 Q591 430.7 687 470"/>
+<path class="fg-edge" d="M195 590 Q403.5 530.5 612 590"/>
+<path class="fg-edge" d="M195 590 Q478.5 517 762 590"/>
+<path class="fg-edge" d="M270 590 Q441 537.2 612 590"/>
+<path class="fg-edge" d="M270 590 Q478.5 530.5 687 590"/>
+<path class="fg-edge" d="M345 590 Q516 537.2 687 590"/>
+<path class="fg-edge" d="M345 590 Q553.5 530.5 762 590"/>
+<path class="fg-edge" d="M420 590 Q516 550.7 612 590"/>
+<path class="fg-edge" d="M420 590 Q591 537.2 762 590"/>
+<path class="fg-edge" d="M495 590 Q591 550.7 687 590"/>
+<path class="fg-edge" d="M195 665 Q403.5 605.5 612 665"/>
+<path class="fg-edge" d="M195 665 Q478.5 592 762 665"/>
+<path class="fg-edge" d="M270 665 Q441 612.2 612 665"/>
+<path class="fg-edge" d="M270 665 Q478.5 605.5 687 665"/>
+<path class="fg-edge" d="M345 665 Q516 612.2 687 665"/>
+<path class="fg-edge" d="M345 665 Q553.5 605.5 762 665"/>
+<path class="fg-edge" d="M420 665 Q516 625.7 612 665"/>
+<path class="fg-edge" d="M420 665 Q591 612.2 762 665"/>
+<path class="fg-edge" d="M495 665 Q591 625.7 687 665"/>
+<path class="fg-edge" d="M195 740 Q403.5 680.5 612 740"/>
+<path class="fg-edge" d="M195 740 Q478.5 667 762 740"/>
+<path class="fg-edge" d="M270 740 Q441 687.2 612 740"/>
+<path class="fg-edge" d="M270 740 Q478.5 680.5 687 740"/>
+<path class="fg-edge" d="M345 740 Q516 687.2 687 740"/>
+<path class="fg-edge" d="M345 740 Q553.5 680.5 762 740"/>
+<path class="fg-edge" d="M420 740 Q516 700.7 612 740"/>
+<path class="fg-edge" d="M420 740 Q591 687.2 762 740"/>
+<path class="fg-edge" d="M495 740 Q591 700.7 687 740"/>
+<path class="fg-edge" d="M195 170 Q135.2 380 195 590"/>
+<path class="fg-edge" d="M195 170 Q121.7 455 195 740"/>
+<path class="fg-edge" d="M195 245 Q141.9 417.5 195 590"/>
+<path class="fg-edge" d="M195 245 Q135.2 455 195 665"/>
+<path class="fg-edge" d="M195 320 Q141.9 492.5 195 665"/>
+<path class="fg-edge" d="M195 320 Q135.2 530 195 740"/>
+<path class="fg-edge" d="M195 395 Q155.4 492.5 195 590"/>
+<path class="fg-edge" d="M195 395 Q141.9 567.5 195 740"/>
+<path class="fg-edge" d="M195 470 Q155.4 567.5 195 665"/>
+<path class="fg-edge" d="M270 170 Q210.2 380 270 590"/>
+<path class="fg-edge" d="M270 170 Q196.7 455 270 740"/>
+<path class="fg-edge" d="M270 245 Q216.9 417.5 270 590"/>
+<path class="fg-edge" d="M270 245 Q210.2 455 270 665"/>
+<path class="fg-edge" d="M270 320 Q216.9 492.5 270 665"/>
+<path class="fg-edge" d="M270 320 Q210.2 530 270 740"/>
+<path class="fg-edge" d="M270 395 Q230.4 492.5 270 590"/>
+<path class="fg-edge" d="M270 395 Q216.9 567.5 270 740"/>
+<path class="fg-edge" d="M270 470 Q230.4 567.5 270 665"/>
+<path class="fg-edge" d="M345 170 Q285.2 380 345 590"/>
+<path class="fg-edge" d="M345 170 Q271.7 455 345 740"/>
+<path class="fg-edge" d="M345 245 Q291.9 417.5 345 590"/>
+<path class="fg-edge" d="M345 245 Q285.2 455 345 665"/>
+<path class="fg-edge" d="M345 320 Q291.9 492.5 345 665"/>
+<path class="fg-edge" d="M345 320 Q285.2 530 345 740"/>
+<path class="fg-edge" d="M345 395 Q305.4 492.5 345 590"/>
+<path class="fg-edge" d="M345 395 Q291.9 567.5 345 740"/>
+<path class="fg-edge" d="M345 470 Q305.4 567.5 345 665"/>
+<path class="fg-edge" d="M420 170 Q360.2 380 420 590"/>
+<path class="fg-edge" d="M420 170 Q346.7 455 420 740"/>
+<path class="fg-edge" d="M420 245 Q366.9 417.5 420 590"/>
+<path class="fg-edge" d="M420 245 Q360.2 455 420 665"/>
+<path class="fg-edge" d="M420 320 Q366.9 492.5 420 665"/>
+<path class="fg-edge" d="M420 320 Q360.2 530 420 740"/>
+<path class="fg-edge" d="M420 395 Q380.4 492.5 420 590"/>
+<path class="fg-edge" d="M420 395 Q366.9 567.5 420 740"/>
+<path class="fg-edge" d="M420 470 Q380.4 567.5 420 665"/>
+<path class="fg-edge" d="M495 170 Q435.2 380 495 590"/>
+<path class="fg-edge" d="M495 170 Q421.7 455 495 740"/>
+<path class="fg-edge" d="M495 245 Q441.9 417.5 495 590"/>
+<path class="fg-edge" d="M495 245 Q435.2 455 495 665"/>
+<path class="fg-edge" d="M495 320 Q441.9 492.5 495 665"/>
+<path class="fg-edge" d="M495 320 Q435.2 530 495 740"/>
+<path class="fg-edge" d="M495 395 Q455.4 492.5 495 590"/>
+<path class="fg-edge" d="M495 395 Q441.9 567.5 495 740"/>
+<path class="fg-edge" d="M495 470 Q455.4 567.5 495 665"/>
+<path class="fg-edge" d="M612 170 Q552.2 380 612 590"/>
+<path class="fg-edge" d="M612 170 Q538.7 455 612 740"/>
+<path class="fg-edge" d="M612 245 Q559 417.5 612 590"/>
+<path class="fg-edge" d="M612 245 Q552.2 455 612 665"/>
+<path class="fg-edge" d="M612 320 Q559 492.5 612 665"/>
+<path class="fg-edge" d="M612 320 Q552.2 530 612 740"/>
+<path class="fg-edge" d="M612 395 Q572.5 492.5 612 590"/>
+<path class="fg-edge" d="M612 395 Q559 567.5 612 740"/>
+<path class="fg-edge" d="M612 470 Q572.5 567.5 612 665"/>
+<path class="fg-edge" d="M687 170 Q627.2 380 687 590"/>
+<path class="fg-edge" d="M687 170 Q613.7 455 687 740"/>
+<path class="fg-edge" d="M687 245 Q634 417.5 687 590"/>
+<path class="fg-edge" d="M687 245 Q627.2 455 687 665"/>
+<path class="fg-edge" d="M687 320 Q634 492.5 687 665"/>
+<path class="fg-edge" d="M687 320 Q627.2 530 687 740"/>
+<path class="fg-edge" d="M687 395 Q647.5 492.5 687 590"/>
+<path class="fg-edge" d="M687 395 Q634 567.5 687 740"/>
+<path class="fg-edge" d="M687 470 Q647.5 567.5 687 665"/>
+<path class="fg-edge" d="M762 170 Q702.2 380 762 590"/>
+<path class="fg-edge" d="M762 170 Q688.7 455 762 740"/>
+<path class="fg-edge" d="M762 245 Q709 417.5 762 590"/>
+<path class="fg-edge" d="M762 245 Q702.2 455 762 665"/>
+<path class="fg-edge" d="M762 320 Q709 492.5 762 665"/>
+<path class="fg-edge" d="M762 320 Q702.2 530 762 740"/>
+<path class="fg-edge" d="M762 395 Q722.5 492.5 762 590"/>
+<path class="fg-edge" d="M762 395 Q709 567.5 762 740"/>
+<path class="fg-edge" d="M762 470 Q722.5 567.5 762 665"/>
+<circle class="fg-q" cx="195" cy="62" r="7.5"/>
+<circle class="fg-q" cx="270" cy="62" r="7.5"/>
+<circle class="fg-q" cx="345" cy="62" r="7.5"/>
+<circle class="fg-q" cx="420" cy="62" r="7.5"/>
+<circle class="fg-q" cx="495" cy="62" r="7.5"/>
+<rect class="fg-q" x="604.5" y="54.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="54.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="54.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="92" cy="170" r="7.5"/>
+<circle class="fg-q" cx="92" cy="245" r="7.5"/>
+<circle class="fg-q" cx="92" cy="320" r="7.5"/>
+<circle class="fg-q" cx="92" cy="395" r="7.5"/>
+<circle class="fg-q" cx="92" cy="470" r="7.5"/>
+<rect class="fg-x" x="84.5" y="582.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="84.5" y="657.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="84.5" y="732.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="195" cy="170" r="7.5"/>
+<circle class="fg-q" cx="270" cy="170" r="7.5"/>
+<circle class="fg-q" cx="345" cy="170" r="7.5"/>
+<circle class="fg-q" cx="420" cy="170" r="7.5"/>
+<circle class="fg-q" cx="495" cy="170" r="7.5"/>
+<rect class="fg-q" x="604.5" y="162.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="162.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="162.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="195" cy="245" r="7.5"/>
+<circle class="fg-q" cx="270" cy="245" r="7.5"/>
+<circle class="fg-q" cx="345" cy="245" r="7.5"/>
+<circle class="fg-q" cx="420" cy="245" r="7.5"/>
+<circle class="fg-q" cx="495" cy="245" r="7.5"/>
+<rect class="fg-q" x="604.5" y="237.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="237.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="237.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="195" cy="320" r="7.5"/>
+<circle class="fg-q" cx="270" cy="320" r="7.5"/>
+<circle class="fg-q" cx="345" cy="320" r="7.5"/>
+<circle class="fg-q" cx="420" cy="320" r="7.5"/>
+<circle class="fg-q" cx="495" cy="320" r="7.5"/>
+<rect class="fg-q" x="604.5" y="312.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="312.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="312.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="195" cy="395" r="7.5"/>
+<circle class="fg-q" cx="270" cy="395" r="7.5"/>
+<circle class="fg-q" cx="345" cy="395" r="7.5"/>
+<circle class="fg-q" cx="420" cy="395" r="7.5"/>
+<circle class="fg-q" cx="495" cy="395" r="7.5"/>
+<rect class="fg-q" x="604.5" y="387.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="387.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="387.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="195" cy="470" r="7.5"/>
+<circle class="fg-q" cx="270" cy="470" r="7.5"/>
+<circle class="fg-q" cx="345" cy="470" r="7.5"/>
+<circle class="fg-q" cx="420" cy="470" r="7.5"/>
+<circle class="fg-q" cx="495" cy="470" r="7.5"/>
+<rect class="fg-q" x="604.5" y="462.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="679.5" y="462.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-q" x="754.5" y="462.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="187.5" y="582.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="262.5" y="582.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="337.5" y="582.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="412.5" y="582.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="487.5" y="582.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="612" cy="590" r="7.5"/>
+<circle class="fg-q" cx="687" cy="590" r="7.5"/>
+<circle class="fg-q" cx="762" cy="590" r="7.5"/>
+<rect class="fg-x" x="187.5" y="657.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="262.5" y="657.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="337.5" y="657.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="412.5" y="657.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="487.5" y="657.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="612" cy="665" r="7.5"/>
+<circle class="fg-q" cx="687" cy="665" r="7.5"/>
+<circle class="fg-q" cx="762" cy="665" r="7.5"/>
+<rect class="fg-x" x="187.5" y="732.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="262.5" y="732.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="337.5" y="732.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="412.5" y="732.5" width="15" height="15" rx="3.5"/>
+<rect class="fg-x" x="487.5" y="732.5" width="15" height="15" rx="3.5"/>
+<circle class="fg-q" cx="612" cy="740" r="7.5"/>
+<circle class="fg-q" cx="687" cy="740" r="7.5"/>
+<circle class="fg-q" cx="762" cy="740" r="7.5"/>
+</svg>
+              <figcaption>2 つの古典 Tanner グラフ（上・左）の積から量子 LDPC 符号を作るハイパーグラフ積符号。丸が量子ビット、青い四角が Z 型、橙の四角が X 型のスタビライザーを表す。</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <article class="research-card research-card--figure-left">
+          <div class="research-card-head">
+            <div class="research-index">03 &nbsp;Randomness</div>
+            <h3 class="research-title">Quantum randomness</h3>
+            <div class="research-title-ja">量子ランダムネス</div>
+          </div>
+          <div class="research-card-body">
+            <div class="research-text">
+              <p class="research-desc-ja">
+                ランダム量子回路やユニタリ t-デザインといった「量子的なランダムネス」の性質と、その量子情報処理への応用を研究しています。低深度ランダム Clifford 回路による量子符号化、厳密なユニタリ t-デザインの明示的構成と高次ランダム化ベンチマーキングへの応用、測定誘起相転移と誤り訂正の関係などに取り組んできました。
+              </p>
+              <p class="research-desc-en">
+                Exploring the structure of quantum randomness—random quantum circuits and unitary t-designs—and its applications: quantum coding with low-depth random Clifford circuits, explicit constructions of exact unitary designs for higher-order randomized benchmarking, and the link between measurement-induced phase transitions and error correction.
+              </p>
+            </div>
+            <figure class="research-figure">
+<svg class="fig fig-random" viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig3-title" preserveAspectRatio="xMidYMid meet">
+<title id="fig3-title">Brickwork random quantum circuit</title>
+<line class="fg-wire" x1="60" y1="70" x2="762" y2="70"/>
+<line class="fg-wire" x1="60" y1="130" x2="762" y2="130"/>
+<line class="fg-wire" x1="60" y1="190" x2="762" y2="190"/>
+<line class="fg-wire" x1="60" y1="250" x2="762" y2="250"/>
+<line class="fg-wire" x1="60" y1="310" x2="762" y2="310"/>
+<line class="fg-wire" x1="60" y1="370" x2="762" y2="370"/>
+<line class="fg-wire" x1="60" y1="430" x2="762" y2="430"/>
+<line class="fg-wire" x1="60" y1="490" x2="762" y2="490"/>
+<rect class="fg-box" x="119" y="48" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="119" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="146" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">1</tspan></text>
+<rect class="fg-box" x="119" y="168" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="119" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="146" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">2</tspan></text>
+<rect class="fg-box" x="119" y="288" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="119" y="288" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="146" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">3</tspan></text>
+<rect class="fg-box" x="119" y="408" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="119" y="408" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="146" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">4</tspan></text>
+<rect class="fg-box" x="209" y="108" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="209" y="108" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="236" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">5</tspan></text>
+<rect class="fg-box" x="209" y="228" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="209" y="228" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="236" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">6</tspan></text>
+<rect class="fg-box" x="209" y="348" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="209" y="348" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="236" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">7</tspan></text>
+<rect class="fg-box" x="299" y="48" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="299" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="326" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">8</tspan></text>
+<rect class="fg-box" x="299" y="168" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="299" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="326" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">9</tspan></text>
+<rect class="fg-box" x="299" y="288" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="299" y="288" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="326" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">10</tspan></text>
+<rect class="fg-box" x="299" y="408" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="299" y="408" width="62" height="104" rx="7" fill-opacity="0.4"/>
+<text class="fg-text fg-italic" x="326" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">11</tspan></text>
+<rect class="fg-box" x="389" y="108" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="389" y="108" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="416" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">12</tspan></text>
+<rect class="fg-box" x="389" y="228" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="389" y="228" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="416" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">13</tspan></text>
+<rect class="fg-box" x="389" y="348" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="389" y="348" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="416" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">14</tspan></text>
+<rect class="fg-box" x="479" y="48" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="479" y="48" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="506" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">15</tspan></text>
+<rect class="fg-box" x="479" y="168" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="479" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="506" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">16</tspan></text>
+<rect class="fg-box" x="479" y="288" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="479" y="288" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="506" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">17</tspan></text>
+<rect class="fg-box" x="479" y="408" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="479" y="408" width="62" height="104" rx="7" fill-opacity="0.4"/>
+<text class="fg-text fg-italic" x="506" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">18</tspan></text>
+<rect class="fg-box" x="569" y="108" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="569" y="108" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="596" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">19</tspan></text>
+<rect class="fg-box" x="569" y="228" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="569" y="228" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="596" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">20</tspan></text>
+<rect class="fg-box" x="569" y="348" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="569" y="348" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="596" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">21</tspan></text>
+<rect class="fg-box" x="659" y="48" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="659" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="686" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">22</tspan></text>
+<rect class="fg-box" x="659" y="168" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="659" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="686" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">23</tspan></text>
+<rect class="fg-box" x="659" y="288" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="659" y="288" width="62" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="686" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">24</tspan></text>
+<rect class="fg-box" x="659" y="408" width="62" height="104" rx="7"/>
+<rect class="fg-tint" x="659" y="408" width="62" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="686" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">25</tspan></text>
+<path class="fg-box" d="M762 52 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="66.5" x2="828" y2="66.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="73.5" x2="828" y2="73.5"/>
+<path class="fg-box" d="M762 112 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="126.5" x2="828" y2="126.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="133.5" x2="828" y2="133.5"/>
+<path class="fg-box" d="M762 172 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="186.5" x2="828" y2="186.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="193.5" x2="828" y2="193.5"/>
+<path class="fg-box" d="M762 232 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="246.5" x2="828" y2="246.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="253.5" x2="828" y2="253.5"/>
+<path class="fg-box" d="M762 292 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="306.5" x2="828" y2="306.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="313.5" x2="828" y2="313.5"/>
+<path class="fg-box" d="M762 352 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="366.5" x2="828" y2="366.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="373.5" x2="828" y2="373.5"/>
+<path class="fg-box" d="M762 412 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="426.5" x2="828" y2="426.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="433.5" x2="828" y2="433.5"/>
+<path class="fg-box" d="M762 472 h22 a18 18 0 0 1 0 36 h-22 z"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="486.5" x2="828" y2="486.5"/>
+<line class="fg-wire fg-wire-thin" x1="802" y1="493.5" x2="828" y2="493.5"/>
+</svg>
+              <figcaption>ランダムな 2 量子ビットゲートを敷き詰めたブリックワーク型ランダム量子回路。深さとともにユニタリ t-デザインへ近づく。</figcaption>
+            </figure>
+          </div>
+        </article>
+
+      </div>
+    </div>
   </section>
 
   <!-- PUBLICATIONS -->
@@ -940,6 +1737,26 @@
       <div class="section-subtitle">Journal Articles &amp; Preprints</div>
     </div>
     <ul class="pub-list">
+      <li class="pub-item">
+        <div class="pub-main">
+          <span class="pub-title">Proof of a positive coherent-error threshold for topological quantum codes</span>
+          <div class="pub-authors">Shiro Tamiya, Masato Koashi</div>
+        </div>
+        <div class="pub-meta-side">
+          <div class="pub-journal">arXiv:2609.20708</div>
+          <div class="pub-year">2026 (preprint)</div>
+          <div class="pub-tags">
+            <span class="pub-tag">QEC</span>
+            <span class="pub-tag">Coherent errors</span>
+            <span class="pub-tag">Threshold theorem</span>
+            <span class="pub-tag">Topological codes</span>
+          </div>
+          <div class="pub-links">
+            <a href="https://arxiv.org/abs/2609.20708" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+          </div>
+        </div>
+      </li>
+
       <li class="pub-item">
         <div class="pub-main">
           <span class="pub-title">Fault-tolerant quantum computation with polylogarithmic time and constant space overheads</span>
@@ -1120,7 +1937,7 @@
   <section class="tab-panel" id="panel-talks" data-panel="talks" role="tabpanel">
     <div class="section-header">
       <h2 class="section-title">Talks</h2>
-      <div class="section-subtitle">Invited &amp; Conference Presentations</div>
+      <div class="section-subtitle">Presentations &amp; Awards</div>
     </div>
 
     <div class="talk-subheading">International conferences &amp; workshops</div>
@@ -1333,6 +2150,16 @@
     <ul class="talk-list">
       <li class="talk-item">
         <div class="talk-main">
+          <span class="talk-year">2026</span>
+          定数空間・対数多項式時間オーバーヘッド誤り耐性量子計算
+        </div>
+        <div class="talk-meta">
+          <a href="https://jps2026a.gakkai-web.net/data/html/program01.html" target="_blank" rel="noopener noreferrer">日本物理学会 第81回年次大会 (2026年)</a>, 16aA108-1, 領域1 量子情報（理論）, 東京大学 駒場キャンパス, 2026年9月16日
+        </div>
+        <div class="talk-authors ja">田宮 志郎, 小芦 雅斗, 山崎 隼汰</div>
+      </li>
+      <li class="talk-item">
+        <div class="talk-main">
           <span class="talk-year">2023</span>
           測定誘起相転移の体積則相におけるランダム量子回路の誤り訂正能力
         </div>
@@ -1394,6 +2221,46 @@
         </div>
         <div class="talk-meta">第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日 (最優秀発表賞)</div>
         <div class="talk-authors ja">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
+      </li>
+    </ul>
+
+    <div class="talk-subheading" id="awards">Awards &amp; Honors</div>
+    <ul class="talk-list">
+      <li class="talk-item">
+        <div class="talk-main">
+          <span class="talk-year">2026</span>
+          若手ポスター賞 <span class="talk-main-en">/ Young Researcher Poster Award</span>
+        </div>
+        <div class="talk-meta">JST ムーンショット目標6 夏合宿 2026 / JST Moonshot Goal 6 Summer Camp 2026</div>
+      </li>
+      <li class="talk-item">
+        <div class="talk-main">
+          <span class="talk-year">2025</span>
+          Best Paper Award
+        </div>
+        <div class="talk-meta">
+          20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India —
+          "Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes"
+        </div>
+        <div class="talk-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+        <div class="talk-links">
+          <a href="https://tqc.iaqi.org/2025/" class="news-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-globe"></i> TQC 2025</a>
+          <a href="https://arxiv.org/abs/2411.03683" class="news-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf"></i> arXiv</a>
+        </div>
+      </li>
+      <li class="talk-item">
+        <div class="talk-main">
+          <span class="talk-year">2023</span>
+          JSPS Research Fellowship for Young Scientists (DC2)
+        </div>
+        <div class="talk-meta">日本学術振興会 特別研究員 (DC2), 2023年4月 – 2024年3月</div>
+      </li>
+      <li class="talk-item">
+        <div class="talk-main">
+          <span class="talk-year">2019</span>
+          最優秀発表賞 <span class="talk-main-en">/ Best Presentation Award</span>
+        </div>
+        <div class="talk-meta">第14回ナノテク交流シンポジウム, 横浜市立大学, 2019年3月 —「機械学習によるダイヤモンド NV 中心ハミルトニアン推定」</div>
       </li>
     </ul>
   </section>
@@ -1535,7 +2402,24 @@
   })();
 
   /* ===============================
-     Theme toggle (light default)
+     News box: hide the bottom fade once scrolled to the end
+  ================================ */
+  (function () {
+    var box = document.getElementById('news-scroll');
+    if (!box) return;
+    var wrap = box.parentNode;
+    function update() {
+      var atEnd = box.scrollTop + box.clientHeight >= box.scrollHeight - 2;
+      var scrollable = box.scrollHeight > box.clientHeight + 2;
+      wrap.classList.toggle('at-end', atEnd || !scrollable);
+    }
+    box.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  /* ===============================
+     Theme toggle (dark default)
   ================================ */
   (function () {
     var root = document.documentElement;
@@ -1550,12 +2434,14 @@
         root.removeAttribute('data-theme');
         icon.className = 'fa-regular fa-moon';
       }
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1115' : '#ffffff');
       try { localStorage.setItem('theme', theme); } catch (e) {}
     }
 
     var stored = null;
     try { stored = localStorage.getItem('theme'); } catch (e) {}
-    apply(stored || 'light');
+    apply(stored === 'light' ? 'light' : 'dark');
 
     btn.addEventListener('click', function () {
       var cur = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
