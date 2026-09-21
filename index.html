@@ -573,15 +573,9 @@
     .research-card--figure-left .research-figure { order: -1; }
     .research-card-body .research-text { max-width: 520px; }
 
-    /* wide variant (the logical circuit): title block and blurb side by side, figure across the card */
-    .research-card--wide .research-card-top {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-      gap: 40px;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-    .research-card--wide .research-card-head { margin-bottom: 0; }
+    /* wide variant (the logical circuit): title block and blurb stacked, figure across the card */
+    .research-card--wide .research-card-top { margin-bottom: 22px; }
+    .research-card--wide .research-card-top .research-text { max-width: 720px; }
     .research-card--wide .research-desc-ja { margin-bottom: 8px; }
 
     .research-figure {
@@ -624,6 +618,7 @@
     .fig .fg-text      { fill: var(--fig-ink); font-family: 'EB Garamond', 'Times New Roman', serif; font-weight: 500; }
     .fig .fg-italic    { font-style: italic; font-weight: 400; }
     .fig .fg-sub       { font-style: normal; }
+    .fig .fg-wire-label { font-style: normal; opacity: 0.6; }
     .fig .fg-bar       { stroke: var(--fig-ink); stroke-width: 1.6; stroke-linecap: round; }
     .fig .fg-dot       { fill: var(--fig-ink); }
     .fig .fg-bolt      { fill: var(--fig-warm); stroke: var(--fig-fill); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }
@@ -856,8 +851,7 @@
       .research-card-body .research-figure { order: 1; }
       .research-card-body .research-text { max-width: none; }
       .research-card-body .research-figure .fig { height: auto; width: 100%; max-height: 360px; }
-      .research-card--wide .research-card-top { grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; }
-      .research-card--wide .research-card-head { margin-bottom: 4px; }
+      .research-card--wide .research-card-top { margin-bottom: 18px; }
       .research-figure { padding: 16px 14px; }
       /* keep the wide circuit legible on phones: scroll it sideways */
       .research-figure--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -1603,97 +1597,105 @@
             <div class="research-title-ja">量子ランダムネス</div>
           </div>
               <p class="research-desc-ja">
-                ランダム量子回路やユニタリ t-デザインといった「量子的なランダムネス」の性質と、その量子情報処理への応用を研究しています。
+                ランダム量子回路の「量子的なランダムネス」の性質と、その量子情報処理への応用を研究しています。
               <p class="research-desc-en">
-                Exploring the structure of quantum randomness—random quantum circuits and unitary t-designs—and its applications.
+                Exploring the structure of quantum randomness and its applications.
               </p>
             </div>
             <figure class="research-figure">
 <svg class="fig fig-random" viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig3-title" preserveAspectRatio="xMidYMid meet">
 <title id="fig3-title">Brickwork random quantum circuit</title>
 <line class="fg-wire" x1="60" y1="70" x2="762" y2="70"/>
+<text class="fg-text fg-wire-label" x="46" y="76" font-size="17" text-anchor="end">1</text>
 <line class="fg-wire" x1="60" y1="130" x2="762" y2="130"/>
+<text class="fg-text fg-wire-label" x="46" y="136" font-size="17" text-anchor="end">2</text>
 <line class="fg-wire" x1="60" y1="190" x2="762" y2="190"/>
+<text class="fg-text fg-wire-label" x="46" y="196" font-size="17" text-anchor="end">3</text>
 <line class="fg-wire" x1="60" y1="250" x2="762" y2="250"/>
+<text class="fg-text fg-wire-label" x="46" y="256" font-size="17" text-anchor="end">4</text>
 <line class="fg-wire" x1="60" y1="310" x2="762" y2="310"/>
+<text class="fg-text fg-wire-label" x="46" y="316" font-size="17" text-anchor="end">5</text>
 <line class="fg-wire" x1="60" y1="370" x2="762" y2="370"/>
+<text class="fg-text fg-wire-label" x="46" y="376" font-size="17" text-anchor="end">6</text>
 <line class="fg-wire" x1="60" y1="430" x2="762" y2="430"/>
+<text class="fg-text fg-wire-label" x="46" y="436" font-size="17" text-anchor="end">7</text>
 <line class="fg-wire" x1="60" y1="490" x2="762" y2="490"/>
-<rect class="fg-box" x="119" y="48" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="119" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="146" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">1</tspan></text>
-<rect class="fg-box" x="119" y="168" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="119" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="146" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">2</tspan></text>
-<rect class="fg-box" x="119" y="288" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="119" y="288" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="146" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">3</tspan></text>
-<rect class="fg-box" x="119" y="408" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="119" y="408" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="146" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">4</tspan></text>
-<rect class="fg-box" x="209" y="108" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="209" y="108" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="236" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">5</tspan></text>
-<rect class="fg-box" x="209" y="228" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="209" y="228" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="236" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">6</tspan></text>
-<rect class="fg-box" x="209" y="348" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="209" y="348" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="236" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">7</tspan></text>
-<rect class="fg-box" x="299" y="48" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="299" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="326" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">8</tspan></text>
-<rect class="fg-box" x="299" y="168" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="299" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="326" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">9</tspan></text>
-<rect class="fg-box" x="299" y="288" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="299" y="288" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="326" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">10</tspan></text>
-<rect class="fg-box" x="299" y="408" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="299" y="408" width="62" height="104" rx="7" fill-opacity="0.4"/>
-<text class="fg-text fg-italic" x="326" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">11</tspan></text>
-<rect class="fg-box" x="389" y="108" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="389" y="108" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="416" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">12</tspan></text>
-<rect class="fg-box" x="389" y="228" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="389" y="228" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="416" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">13</tspan></text>
-<rect class="fg-box" x="389" y="348" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="389" y="348" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="416" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">14</tspan></text>
-<rect class="fg-box" x="479" y="48" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="479" y="48" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="506" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">15</tspan></text>
-<rect class="fg-box" x="479" y="168" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="479" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="506" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">16</tspan></text>
-<rect class="fg-box" x="479" y="288" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="479" y="288" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="506" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">17</tspan></text>
-<rect class="fg-box" x="479" y="408" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="479" y="408" width="62" height="104" rx="7" fill-opacity="0.4"/>
-<text class="fg-text fg-italic" x="506" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">18</tspan></text>
-<rect class="fg-box" x="569" y="108" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="569" y="108" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="596" y="169" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">19</tspan></text>
-<rect class="fg-box" x="569" y="228" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="569" y="228" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="596" y="289" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">20</tspan></text>
-<rect class="fg-box" x="569" y="348" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="569" y="348" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="596" y="409" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">21</tspan></text>
-<rect class="fg-box" x="659" y="48" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="659" y="48" width="62" height="104" rx="7" fill-opacity="0.1"/>
-<text class="fg-text fg-italic" x="686" y="109" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">22</tspan></text>
-<rect class="fg-box" x="659" y="168" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="659" y="168" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="686" y="229" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">23</tspan></text>
-<rect class="fg-box" x="659" y="288" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="659" y="288" width="62" height="104" rx="7" fill-opacity="0.2"/>
-<text class="fg-text fg-italic" x="686" y="349" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">24</tspan></text>
-<rect class="fg-box" x="659" y="408" width="62" height="104" rx="7"/>
-<rect class="fg-tint" x="659" y="408" width="62" height="104" rx="7" fill-opacity="0.3"/>
-<text class="fg-text fg-italic" x="686" y="469" font-size="27" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="14">25</tspan></text>
+<text class="fg-text fg-wire-label" x="46" y="496" font-size="17" text-anchor="end">8</text>
+<rect class="fg-box" x="117" y="48" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="117" y="48" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="142" y="109" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">1,2</tspan></text>
+<rect class="fg-box" x="117" y="168" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="117" y="168" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="142" y="229" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">3,4</tspan></text>
+<rect class="fg-box" x="117" y="288" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="117" y="288" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="142" y="349" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">5,6</tspan></text>
+<rect class="fg-box" x="117" y="408" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="117" y="408" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="142" y="469" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">7,8</tspan></text>
+<rect class="fg-box" x="207" y="108" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="207" y="108" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="232" y="169" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">2,3</tspan></text>
+<rect class="fg-box" x="207" y="228" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="207" y="228" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="232" y="289" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">4,5</tspan></text>
+<rect class="fg-box" x="207" y="348" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="207" y="348" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="232" y="409" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">6,7</tspan></text>
+<rect class="fg-box" x="297" y="48" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="297" y="48" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="322" y="109" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">1,2</tspan></text>
+<rect class="fg-box" x="297" y="168" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="297" y="168" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="322" y="229" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">3,4</tspan></text>
+<rect class="fg-box" x="297" y="288" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="297" y="288" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="322" y="349" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">5,6</tspan></text>
+<rect class="fg-box" x="297" y="408" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="297" y="408" width="66" height="104" rx="7" fill-opacity="0.4"/>
+<text class="fg-text fg-italic" x="322" y="469" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">7,8</tspan></text>
+<rect class="fg-box" x="387" y="108" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="387" y="108" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="412" y="169" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">2,3</tspan></text>
+<rect class="fg-box" x="387" y="228" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="387" y="228" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="412" y="289" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">4,5</tspan></text>
+<rect class="fg-box" x="387" y="348" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="387" y="348" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="412" y="409" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">6,7</tspan></text>
+<rect class="fg-box" x="477" y="48" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="477" y="48" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="502" y="109" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">1,2</tspan></text>
+<rect class="fg-box" x="477" y="168" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="477" y="168" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="502" y="229" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">3,4</tspan></text>
+<rect class="fg-box" x="477" y="288" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="477" y="288" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="502" y="349" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">5,6</tspan></text>
+<rect class="fg-box" x="477" y="408" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="477" y="408" width="66" height="104" rx="7" fill-opacity="0.4"/>
+<text class="fg-text fg-italic" x="502" y="469" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">7,8</tspan></text>
+<rect class="fg-box" x="567" y="108" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="567" y="108" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="592" y="169" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">2,3</tspan></text>
+<rect class="fg-box" x="567" y="228" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="567" y="228" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="592" y="289" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">4,5</tspan></text>
+<rect class="fg-box" x="567" y="348" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="567" y="348" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="592" y="409" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">6,7</tspan></text>
+<rect class="fg-box" x="657" y="48" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="657" y="48" width="66" height="104" rx="7" fill-opacity="0.1"/>
+<text class="fg-text fg-italic" x="682" y="109" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">1,2</tspan></text>
+<rect class="fg-box" x="657" y="168" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="657" y="168" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="682" y="229" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">3,4</tspan></text>
+<rect class="fg-box" x="657" y="288" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="657" y="288" width="66" height="104" rx="7" fill-opacity="0.2"/>
+<text class="fg-text fg-italic" x="682" y="349" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">5,6</tspan></text>
+<rect class="fg-box" x="657" y="408" width="66" height="104" rx="7"/>
+<rect class="fg-tint" x="657" y="408" width="66" height="104" rx="7" fill-opacity="0.3"/>
+<text class="fg-text fg-italic" x="682" y="469" font-size="26" text-anchor="middle">U<tspan class="fg-sub" dy="7" font-size="15">7,8</tspan></text>
 <path class="fg-box" d="M762 52 h22 a18 18 0 0 1 0 36 h-22 z"/>
 <line class="fg-wire fg-wire-thin" x1="802" y1="66.5" x2="828" y2="66.5"/>
 <line class="fg-wire fg-wire-thin" x1="802" y1="73.5" x2="828" y2="73.5"/>
