@@ -67,6 +67,7 @@
       --fig-region-q: rgba(113, 113, 122, 0.10);
       --fig-region-z: rgba(30, 58, 138, 0.09);
       --fig-region-x: rgba(217, 119, 6, 0.12);
+      --award:        #b45309;
     }
 
     :root[data-theme="dark"] {
@@ -91,6 +92,7 @@
       --fig-region-q: rgba(228, 228, 231, 0.07);
       --fig-region-z: rgba(147, 197, 253, 0.14);
       --fig-region-x: rgba(251, 191, 36, 0.13);
+      --award:        #fbbf24;
     }
 
     * { box-sizing: border-box; }
@@ -428,14 +430,6 @@
       transition: opacity 0.2s ease;
     }
     .news-scroll-wrap.at-end::after { opacity: 0; }
-    .news-scroll-hint {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: var(--text-faint);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-align: right;
-    }
     .news-list { list-style: none; padding: 0; margin: 0; }
     .news-item {
       display: grid;
@@ -561,8 +555,8 @@
       letter-spacing: 0.08em;
     }
 
-    /* text (title + one-line descriptions) beside the figure; the figure panel
-       hugs its drawing (fixed height, width from the aspect ratio) */
+    /* text block and figure side by side; the figure side alternates
+       (01 right, 02 left, 03 right). The figure panel hugs its drawing. */
     .research-card-body {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -572,11 +566,6 @@
     .research-card--figure-left .research-card-body { grid-template-columns: auto minmax(0, 1fr); }
     .research-card--figure-left .research-figure { order: -1; }
     .research-card-body .research-text { max-width: 520px; }
-
-    /* wide variant (the logical circuit): title block and blurb stacked, figure across the card */
-    .research-card--wide .research-card-top { margin-bottom: 22px; }
-    .research-card--wide .research-card-top .research-text { max-width: 720px; }
-    .research-card--wide .research-desc-ja { margin-bottom: 8px; }
 
     .research-figure {
       margin: 0;
@@ -592,10 +581,14 @@
       height: auto;
     }
     .research-card-body .research-figure .fig {
-      height: 320px;
+      height: 300px;
       width: auto;
       max-width: 100%;
     }
+
+    /* 01: the logical circuit is very wide, so its figure takes two thirds of the card */
+    .research-card--wide .research-card-body { grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr); }
+    .research-card--wide .research-card-body .research-figure .fig { width: 100%; height: auto; }
 
     .research-text { min-width: 0; }
     .research-desc-ja {
@@ -632,56 +625,160 @@
     .fig .fg-tint      { fill: var(--fig-accent); }
 
     /* ===============================
-       Publications
+       Structured lists: Publications / Talks / Awards
+       (numbered like a bibliography, newest first;
+        the index chips jump to each group)
     ================================ */
-    .pub-list { list-style: none; padding: 0; margin: 0; }
-    .pub-item {
-      display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 40px;
-      padding: 26px 0;
-      border-bottom: 1px solid var(--border-soft);
-      align-items: start;
-    }
-    .pub-item:last-child { border-bottom: none; }
-    .pub-title {
-      font-size: 1.02rem;
-      font-weight: 500;
-      margin: 0 0 6px;
-      display: block;
-      color: var(--text);
-      line-height: 1.45;
-    }
-    .pub-authors {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .pub-authors .me { color: var(--text); font-weight: 600; }
-    .pub-meta-side {
-      text-align: right;
+    .cv-index {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: -20px 0 56px;
     }
-    .pub-journal {
-      font-style: italic;
-      color: var(--text);
-      font-family: 'EB Garamond', serif;
-      font-size: 1.08rem;
-    }
-    .pub-year {
-      font-size: 0.85rem;
+    .cv-index a {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
       color: var(--text-muted);
-      font-family: 'Inter', monospace;
+      text-decoration: none;
+      transition: color 0.15s ease, border-color 0.15s ease;
     }
+    .cv-index a:hover { color: var(--text); border-color: var(--text-muted); text-decoration: none; }
+    .cv-count {
+      font-family: 'Inter', monospace;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-faint);
+    }
+
+    .cv-group { scroll-margin-top: 96px; }
+    .cv-group + .cv-group { margin-top: 64px; }
+    .cv-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 4px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'EB Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+      color: var(--text);
+    }
+    .cv-heading .cv-count { font-size: 0.78rem; }
+
+    .cv-list { list-style: none; margin: 0; padding: 0; }
+    .cv-item {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 0 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cv-item:last-child { border-bottom: none; }
+    .cv-num {
+      padding-top: 3px;
+      text-align: right;
+      font-family: 'Inter', monospace;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.78rem;
+      color: var(--text-faint);
+      white-space: nowrap;
+    }
+    .cv-body { min-width: 0; }
+    .cv-title {
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .cv-title-en { font-weight: 400; color: var(--text-muted); }
+    .cv-authors {
+      margin-top: 3px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .cv-venue {
+      margin-top: 3px;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .cv-work {
+      margin-top: 3px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--text-faint);
+    }
+    .cv-venue a, .cv-work a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    }
+    .cv-venue a:hover, .cv-work a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+    /* citation line of a paper: Journal Vol, page (year) · arXiv · tags */
+    .cv-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 20px;
+      margin-top: 5px;
+    }
+    .cv-meta .cv-venue { margin-top: 0; }
+    .cv-cite {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.06rem;
+      color: var(--text);
+    }
+    .cv-venue a.cv-cite { color: var(--text); }
+    .cv-venue a.cv-cite:hover { color: var(--accent); }
+    .cv-journal { font-style: italic; }
+    .cv-vol { font-weight: 600; }
+    .cv-sep { margin: 0 9px; color: var(--text-faint); }
+    .cv-venue a.cv-link {
+      color: var(--accent);
+      font-size: 0.82rem;
+      text-decoration: none;
+    }
+    .cv-venue a.cv-link:hover { text-decoration: underline; }
+
+    .cv-note {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.7;
+      color: var(--text-muted);
+      vertical-align: 1px;
+      white-space: nowrap;
+    }
+    .cv-note--award {
+      color: var(--award);
+      border-color: color-mix(in srgb, var(--award), transparent 55%);
+    }
+
     .pub-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       justify-content: flex-end;
-      margin-top: 4px;
     }
     .pub-tag {
       background: var(--tag-bg);
@@ -692,68 +789,6 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-    .pub-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: flex-end;
-      margin-top: 6px;
-    }
-    .pub-link {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    /* ===============================
-       Talks
-    ================================ */
-    .talk-subheading {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--text-muted);
-      margin: 36px 0 12px;
-      font-weight: 600;
-    }
-    .talk-subheading:first-child { margin-top: 0; }
-
-    .talk-list { list-style: none; padding: 0; margin: 0; }
-    .talk-item {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border-soft);
-    }
-    .talk-item:last-child { border-bottom: none; }
-    .talk-main {
-      font-size: 0.98rem;
-      font-weight: 500;
-      color: var(--text);
-      line-height: 1.5;
-    }
-    .talk-year {
-      font-family: 'Inter', monospace;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-right: 10px;
-      padding: 2px 6px;
-      background: var(--tag-bg);
-      border-radius: 3px;
-    }
-    .talk-meta {
-      margin-top: 6px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-    .talk-authors {
-      margin-top: 4px;
-      font-size: 0.83rem;
-      color: var(--text-faint);
-      font-style: italic;
-    }
-    .talk-authors.ja { font-style: normal; }
 
     /* ===============================
        Contact
@@ -823,12 +858,6 @@
       flex-wrap: wrap;
     }
 
-    .talk-links { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
-    .talk-main-en {
-      font-weight: 400;
-      color: var(--text-muted);
-    }
-
     /* soften the embedded map in the dark theme */
     :root[data-theme="dark"] .contact-map iframe {
       filter: invert(0.92) hue-rotate(180deg) saturate(0.75) brightness(0.95);
@@ -847,19 +876,22 @@
       .bio-container { grid-template-columns: 1fr; gap: 36px; }
       .research-card { padding: 22px 18px 22px; }
       .research-card-body,
+      .research-card--wide .research-card-body,
       .research-card--figure-left .research-card-body { grid-template-columns: 1fr; gap: 20px; }
       .research-card-body .research-figure { order: 1; }
       .research-card-body .research-text { max-width: none; }
       .research-card-body .research-figure .fig { height: auto; width: 100%; max-height: 360px; }
-      .research-card--wide .research-card-top { margin-bottom: 18px; }
       .research-figure { padding: 16px 14px; }
       /* keep the wide circuit legible on phones: scroll it sideways */
       .research-figure--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .research-figure--scroll .fig { min-width: 640px; }
       .news-scroll { max-height: 480px; }
-      .pub-item { grid-template-columns: 1fr; gap: 14px; }
-      .pub-meta-side { text-align: left; align-items: flex-start; }
-      .pub-tags, .pub-links { justify-content: flex-start; }
+      .cv-index { margin: -12px 0 40px; }
+      .cv-group { scroll-margin-top: 136px; }
+      .cv-group + .cv-group { margin-top: 52px; }
+      .cv-item { grid-template-columns: 34px minmax(0, 1fr); gap: 0 10px; }
+      .cv-meta { flex-direction: column; align-items: flex-start; }
+      .pub-tags { justify-content: flex-start; }
       .contact-row { grid-template-columns: 1fr; gap: 28px; padding: 28px 24px; }
       .news-item { grid-template-columns: 1fr; gap: 6px; }
       .section-header { flex-direction: column; align-items: flex-start; gap: 6px; }
@@ -1041,7 +1073,6 @@
     </ul>
     </div>
     </div>
-    <div class="news-scroll-hint">Scroll for older updates</div>
     </div>
 
     <!-- Biography (inside Home) -->
@@ -1106,13 +1137,13 @@
       <div class="research-list">
 
         <article class="research-card research-card--wide">
-          <div class="research-card-top">
-          <div class="research-card-head">
-            <div class="research-index">01 &nbsp;FTQC</div>
-            <h3 class="research-title">Fault-tolerant quantum computation</h3>
-            <div class="research-title-ja">誤り耐性量子計算</div>
-          </div>
+          <div class="research-card-body">
             <div class="research-text">
+            <div class="research-card-head">
+              <div class="research-index">01 &nbsp;FTQC</div>
+              <h3 class="research-title">Fault-tolerant quantum computation</h3>
+              <div class="research-title-ja">誤り耐性量子計算</div>
+            </div>
               <p class="research-desc-ja">
                 ノイズのある量子デバイス上で、任意に長い量子計算を信頼性高く実行するための理論を構築しています。
               </p>
@@ -1120,7 +1151,6 @@
                 Building the theory of reliable quantum computation on noisy quantum devices.
               </p>
             </div>
-          </div>
             <figure class="research-figure research-figure--scroll">
 <svg class="fig fig-circuit" viewBox="0 0 1440 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fig1-title" preserveAspectRatio="xMidYMid meet">
 <title id="fig1-title">Fault-tolerant logical circuit with error-correction gadgets</title>
@@ -1317,16 +1347,17 @@
 <use class="fg-bolt" href="#bolt" transform="translate(590 444) rotate(-22) translate(-20 -22)"/>
 </svg>
             </figure>
+          </div>
         </article>
 
-        <article class="research-card">
+        <article class="research-card research-card--figure-left">
           <div class="research-card-body">
             <div class="research-text">
-          <div class="research-card-head">
-            <div class="research-index">02 &nbsp;QEC</div>
-            <h3 class="research-title">Quantum error-correcting codes</h3>
-            <div class="research-title-ja">量子誤り訂正符号</div>
-          </div>
+              <div class="research-card-head">
+                <div class="research-index">02 &nbsp;QEC</div>
+                <h3 class="research-title">Quantum error-correcting codes</h3>
+                <div class="research-title-ja">量子誤り訂正符号</div>
+              </div>
               <p class="research-desc-ja">
                 高性能な量子誤り訂正符号を設計・解析・復号手法を研究しています。
               </p>
@@ -1588,18 +1619,19 @@
           </div>
         </article>
 
-        <article class="research-card research-card--figure-left">
+        <article class="research-card">
           <div class="research-card-body">
             <div class="research-text">
-          <div class="research-card-head">
-            <div class="research-index">03 &nbsp;Randomness</div>
-            <h3 class="research-title">Quantum randomness</h3>
-            <div class="research-title-ja">量子ランダムネス</div>
-          </div>
+              <div class="research-card-head">
+                <div class="research-index">03 &nbsp;Randomness</div>
+                <h3 class="research-title">Quantum randomness</h3>
+                <div class="research-title-ja">量子ランダムネス</div>
+              </div>
               <p class="research-desc-ja">
-                ランダム量子回路の「量子的なランダムネス」の性質と、その量子情報処理への応用を研究しています。
+                ランダム量子回路やユニタリ t-デザインといった「量子的なランダムネス」の性質と、その量子情報処理への応用を研究しています。
+              </p>
               <p class="research-desc-en">
-                Exploring the structure of quantum randomness and its applications.
+                Exploring the structure of quantum randomness—random quantum circuits and unitary t-designs—and its applications.
               </p>
             </div>
             <figure class="research-figure">
@@ -1734,201 +1766,132 @@
     <div class="section-header">
       <h2 class="section-title">Publications</h2>
     </div>
-    <ul class="pub-list">
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Proof of a positive coherent-error threshold for topological quantum codes</span>
-          <div class="pub-authors">Shiro Tamiya, Masato Koashi</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">arXiv:2609.20708</div>
-          <div class="pub-year">2026 (preprint)</div>
-          <div class="pub-tags">
-            <span class="pub-tag">QEC</span>
-            <span class="pub-tag">Coherent errors</span>
-            <span class="pub-tag">Threshold theorem</span>
-            <span class="pub-tag">Topological codes</span>
-          </div>
-          <div class="pub-links">
-            <a href="https://arxiv.org/abs/2609.20708" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
-          </div>
-        </div>
-      </li>
+    <nav class="cv-index" aria-label="Sections">
+      <a href="#pub-preprints">Preprints</a>
+      <a href="#pub-journal">Journal Articles</a>
+    </nav>
 
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Fault-tolerant quantum computation with polylogarithmic time and constant space overheads</span>
-          <div class="pub-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">Nature Physics</div>
-          <div class="pub-year">2025</div>
-          <div class="pub-tags">
-            <span class="pub-tag">FTQC</span>
-            <span class="pub-tag">Threshold theorem</span>
-            <span class="pub-tag">QLDPC codes</span>
-            <span class="pub-tag">Concatenated codes</span>
+    <section class="cv-group" id="pub-preprints" aria-labelledby="pub-preprints-h">
+      <h3 class="cv-heading" id="pub-preprints-h">Preprints <span class="cv-count">2</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">Proof of a positive coherent-error threshold for topological quantum codes</div>
+            <div class="cv-authors">Shiro Tamiya, Masato Koashi</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://arxiv.org/abs/2609.20708" target="_blank" rel="noopener noreferrer">arXiv:2609.20708</a> (2026)</div>
+              <div class="pub-tags"><span class="pub-tag">QEC</span><span class="pub-tag">Coherent errors</span><span class="pub-tag">Threshold theorem</span><span class="pub-tag">Topological codes</span></div>
+            </div>
           </div>
-          <div class="pub-links">
-            <a href="https://www.nature.com/articles/s41567-025-03102-5" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2411.03683" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum Low-Density Parity-Check Codes</div>
+            <div class="cv-authors">Kento Tsubouchi, Hayata Yamasaki, Shiro Tamiya</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://arxiv.org/abs/2510.08695" target="_blank" rel="noopener noreferrer">arXiv:2510.08695</a> (2025)</div>
+              <div class="pub-tags"><span class="pub-tag">QLDPC codes</span><span class="pub-tag">Decoder</span></div>
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      </ol>
+    </section>
 
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum Low-Density Parity-Check Codes</span>
-          <div class="pub-authors">Kento Tsubouchi, Hayata Yamasaki,Shiro Tamiya</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">arXiv:2510.08695</div>
-          <div class="pub-year">2025 (preprint)</div>
-          <div class="pub-tags">
-            <span class="pub-tag">QLDPC codes</span>
-            <span class="pub-tag">Decoder</span>
+    <section class="cv-group" id="pub-journal" aria-labelledby="pub-journal-h">
+      <h3 class="cv-heading" id="pub-journal-h">Journal Articles <span class="cv-count">8</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[8]</span>
+          <div class="cv-body">
+            <div class="cv-title">Fault-tolerant quantum computation with polylogarithmic time and constant space overheads</div>
+            <div class="cv-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://www.nature.com/articles/s41567-025-03102-5" target="_blank" rel="noopener noreferrer"><span class="cv-journal">Nature Physics</span> <span class="cv-vol">22</span>, 27–32 (2026)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2411.03683" target="_blank" rel="noopener noreferrer">arXiv:2411.03683</a></div>
+              <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">Threshold theorem</span><span class="pub-tag">QLDPC codes</span><span class="pub-tag">Concatenated codes</span></div>
+            </div>
           </div>
-          <div class="pub-links">
-            <a href="https://arxiv.org/abs/2510.08695" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[7]</span>
+          <div class="cv-body">
+            <div class="cv-title">Concatenate codes, save qubits</div>
+            <div class="cv-authors">Satoshi Yoshida, Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://www.nature.com/articles/s41534-025-01035-8" target="_blank" rel="noopener noreferrer"><span class="cv-journal">npj Quantum Information</span> <span class="cv-vol">11</span>, 88 (2025)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2402.09606" target="_blank" rel="noopener noreferrer">arXiv:2402.09606</a></div>
+              <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">Concatenated codes</span></div>
+            </div>
           </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Concatenate codes, save qubits</span>
-          <div class="pub-authors">Satoshi Yoshida, Shiro Tamiya, Hayata Yamasaki</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">npj Quantum Information 11, 88</div>
-          <div class="pub-year">2025</div>
-          <div class="pub-tags">
-            <span class="pub-tag">FTQC</span>
-            <span class="pub-tag">Concatenated codes</span>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[6]</span>
+          <div class="cv-body">
+            <div class="cv-title">Scalable Networking of Neutral-Atom Qubits: Nanofiber-Based Approach for Multiprocessor Fault-Tolerant Quantum Computer</div>
+            <div class="cv-authors">Shinichi Sunami, Shiro Tamiya, Ryotaro Inoue, Hayata Yamasaki, Akihisa Goban</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.1103/PRXQuantum.6.010101" target="_blank" rel="noopener noreferrer"><span class="cv-journal">PRX Quantum</span> <span class="cv-vol">6</span>, 010101 (2025)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2407.11111" target="_blank" rel="noopener noreferrer">arXiv:2407.11111</a></div>
+              <div class="pub-tags"><span class="pub-tag">FTQC</span><span class="pub-tag">Neutral Atoms</span></div>
+            </div>
           </div>
-          <div class="pub-links">
-            <a href="https://www.nature.com/articles/s41534-025-01035-8" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2402.09606" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[5]</span>
+          <div class="cv-body">
+            <div class="cv-title">Low-depth random Clifford circuits for quantum coding against Pauli noise using a tensor-network decoder</div>
+            <div class="cv-authors">Andrew S. Darmawan, Yoshifumi Nakata, Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.1103/PhysRevResearch.6.023055" target="_blank" rel="noopener noreferrer"><span class="cv-journal">Physical Review Research</span> <span class="cv-vol">6</span>, 023055 (2024)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2212.05071" target="_blank" rel="noopener noreferrer">arXiv:2212.05071</a></div>
+              <div class="pub-tags"><span class="pub-tag">QEC</span><span class="pub-tag">Randomness</span><span class="pub-tag">Tensor Network</span></div>
+            </div>
           </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Scalable Networking of Neutral-Atom Qubits: Nanofiber-Based Approach for Multiprocessor Fault-Tolerant Quantum Computer</span>
-          <div class="pub-authors">Shinichi Sunami, Shiro Tamiya, Ryotaro Inoue, Hayata Yamasaki, Akihisa Goban</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">PRX Quantum 6, 010101</div>
-          <div class="pub-year">2025</div>
-          <div class="pub-tags">
-            <span class="pub-tag">FTQC</span>
-            <span class="pub-tag">Neutral Atoms</span>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[4]</span>
+          <div class="cv-body">
+            <div class="cv-title">Stochastic gradient line Bayesian optimization for efficient noise-robust optimization of parameterized quantum circuits</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.1038/s41534-022-00592-6" target="_blank" rel="noopener noreferrer"><span class="cv-journal">npj Quantum Information</span> <span class="cv-vol">8</span>, 90 (2022)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2111.07952" target="_blank" rel="noopener noreferrer">arXiv:2111.07952</a></div>
+              <div class="pub-tags"><span class="pub-tag">VQA</span><span class="pub-tag">Optimization</span></div>
+            </div>
           </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.1103/PRXQuantum.6.010101" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2407.11111" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">Calculating nonadiabatic couplings and Berry's phase by variational quantum eigensolvers</div>
+            <div class="cv-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.1103/PhysRevResearch.3.023244" target="_blank" rel="noopener noreferrer"><span class="cv-journal">Physical Review Research</span> <span class="cv-vol">3</span>, 023244 (2021)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2003.01706" target="_blank" rel="noopener noreferrer">arXiv:2003.01706</a></div>
+              <div class="pub-tags"><span class="pub-tag">VQE</span><span class="pub-tag">Quantum Chemistry</span></div>
+            </div>
           </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Low-depth random Clifford circuits for quantum coding against Pauli noise using a tensor-network decoder</span>
-          <div class="pub-authors">Andrew S. Darmawan, Yoshifumi Nakata, Shiro Tamiya, Hayata Yamasaki</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">Physical Review Research 6, 023055</div>
-          <div class="pub-year">2024</div>
-          <div class="pub-tags">
-            <span class="pub-tag">QEC</span>
-            <span class="pub-tag">Randomness</span>
-            <span class="pub-tag">Tensor Network</span>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">Qulacs: a fast and versatile quantum circuit simulator for research purpose</div>
+            <div class="cv-authors">Yasunari Suzuki, Yoshiaki Kawase, Yuya Masumura, Yuria Hiraga, Masahiro Nakadai, Jiabao Chen, Ken M Nakanishi, Kosuke Mitarai, Ryosuke Imai, Shiro Tamiya, Takahiro Yamamoto, Tennin Yan, Toru Kawakubo, Yuya O Nakagawa, Yohei Ibe, Youyuan Zhang, Hirotsugu Yamashita, Hikaru Yoshimura, Akihiro Hayashi, Keisuke Fujii</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.22331/q-2021-10-06-559" target="_blank" rel="noopener noreferrer"><span class="cv-journal">Quantum</span> <span class="cv-vol">5</span>, 559 (2021)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2011.13524" target="_blank" rel="noopener noreferrer">arXiv:2011.13524</a><span class="cv-sep">·</span><a class="cv-link" href="https://github.com/qulacs/qulacs" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+              <div class="pub-tags"><span class="pub-tag">Simulator</span><span class="pub-tag">Software</span></div>
+            </div>
           </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.1103/PhysRevResearch.6.023055" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2212.05071" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Quantum circuits for exact unitary t-designs and applications to higher-order randomized benchmarking</div>
+            <div class="cv-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
+            <div class="cv-meta">
+              <div class="cv-venue"><a class="cv-cite" href="https://doi.org/10.1103/PRXQuantum.2.030339" target="_blank" rel="noopener noreferrer"><span class="cv-journal">PRX Quantum</span> <span class="cv-vol">2</span>, 030339 (2021)</a><span class="cv-sep">·</span><a class="cv-link" href="https://arxiv.org/abs/2102.12617" target="_blank" rel="noopener noreferrer">arXiv:2102.12617</a></div>
+              <div class="pub-tags"><span class="pub-tag">Randomness</span><span class="pub-tag">Benchmarking</span></div>
+            </div>
           </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Stochastic gradient line Bayesian optimization for efficient noise-robust optimization of parameterized quantum circuits</span>
-          <div class="pub-authors">Shiro Tamiya, Hayata Yamasaki</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">npj Quantum Information 8, 90</div>
-          <div class="pub-year">2022</div>
-          <div class="pub-tags">
-            <span class="pub-tag">VQA</span>
-            <span class="pub-tag">Optimization</span>
-          </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.1038/s41534-022-00592-6" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2111.07952" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
-          </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Calculating nonadiabatic couplings and Berry's phase by variational quantum eigensolvers</span>
-          <div class="pub-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">Physical Review Research 3, 023244</div>
-          <div class="pub-year">2021</div>
-          <div class="pub-tags">
-            <span class="pub-tag">VQE</span>
-            <span class="pub-tag">Quantum Chemistry</span>
-          </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.1103/PhysRevResearch.3.023244" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2003.01706" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
-          </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Qulacs: a fast and versatile quantum circuit simulator for research purpose</span>
-          <div class="pub-authors">Yasunari Suzuki, Yoshiaki Kawase, Yuya Masumura, Yuria Hiraga, Masahiro Nakadai, Jiabao Chen, Ken M Nakanishi, Kosuke Mitarai, Ryosuke Imai, Shiro Tamiya, Takahiro Yamamoto, Tennin Yan, Toru Kawakubo, Yuya O Nakagawa, Yohei Ibe, Youyuan Zhang, Hirotsugu Yamashita, Hikaru Yoshimura, Akihiro Hayashi, Keisuke Fujii</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">Quantum 5, 559</div>
-          <div class="pub-year">2021</div>
-          <div class="pub-tags">
-            <span class="pub-tag">Simulator</span>
-            <span class="pub-tag">Software</span>
-          </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.22331/q-2021-10-06-559" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2011.13524" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
-            <a href="https://github.com/qulacs/qulacs" class="pub-link" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </div>
-        </div>
-      </li>
-
-      <li class="pub-item">
-        <div class="pub-main">
-          <span class="pub-title">Quantum circuits for exact unitary t-designs and applications to higher-order randomized benchmarking</span>
-          <div class="pub-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
-        </div>
-        <div class="pub-meta-side">
-          <div class="pub-journal">PRX Quantum 2, 030339</div>
-          <div class="pub-year">2021</div>
-          <div class="pub-tags">
-            <span class="pub-tag">Randomness</span>
-            <span class="pub-tag">Benchmarking</span>
-          </div>
-          <div class="pub-links">
-            <a href="https://doi.org/10.1103/PRXQuantum.2.030339" class="pub-link" target="_blank" rel="noopener noreferrer">Journal</a>
-            <a href="https://arxiv.org/abs/2102.12617" class="pub-link" target="_blank" rel="noopener noreferrer">arXiv</a>
-          </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ol>
+    </section>
   </section>
 
   <!-- TALKS -->
@@ -1937,329 +1900,312 @@
       <h2 class="section-title">Talks</h2>
     </div>
 
-    <div class="talk-subheading">International conferences &amp; workshops</div>
-    <ul class="talk-list">
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2026</span>
-          Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum Low-Density Parity-Check Codes
-        </div>
-        <div class="talk-meta">
-          29th Annual Quantum Information Processing Conference 2026 (QIP2026),
-          University of Latvia, Latvia, January 24–30, 2026 (poster)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Hayata Yamasaki, Kento Tsubouchi</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2025</span>
-          Fault-tolerant quantum computation with polylogarithmic time and constant space overheads
-        </div>
-        <div class="talk-meta">
-          Quantum Error Correction Theory Workshop for Young Researchers,
-          Nagoya University, Japan, December 17–19, 2025 (invited talk)
-        </div>
-        <div class="talk-authors">Shiro Tamiya</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2025</span>
-          Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
-        </div>
-        <div class="talk-meta">
-          20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India, September 15–19, 2025 (Best Paper Award)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2025</span>
-          Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
-        </div>
-        <div class="talk-meta">
-          7th International Conference on Quantum Error Correction (QEC25), Connecticut, United States, August 11–15, 2025
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
-        </div>
-        <div class="talk-meta">
-          24th Asian Quantum Information Science Conference (AQIS 2024), Hokkaido University, Japan, August 26–30, 2024
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2023</span>
-          Quantum coding with random Clifford circuits
-        </div>
-        <div class="talk-meta">
-          QEC Workshop 2023, Yukawa Institute for Theoretical Physics (YITP), Kyoto University, Japan, March 20–31, 2023
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Andrew S. Darmawan, Yoshifumi Nakata, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2022</span>
-          Stochastic Gradient Line Bayesian Optimization: Efficient Noise-Robust Optimization for Parameterized Quantum Circuits
-        </div>
-        <div class="talk-meta">
-          Quantum Information Processing and Quantum Machine Learning (QIP-QML 2022), IQOQI Vienna, Austrian Academy of Sciences, February 21 – March 11, 2022 (invited talk)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2022</span>
-          Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Optimizing Parameterized Quantum Circuits
-        </div>
-        <div class="talk-meta">
-          4th International Workshop on Quantum Resource Estimation (QRE 2022), New York, USA, June 18, 2022 (invited talk)
-        </div>
-        <div class="talk-authors">Hayata Yamasaki, Shiro Tamiya</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2022</span>
-          Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms
-        </div>
-        <div class="talk-meta">
-          APS March Meeting 2022, Chicago, USA, March 14–18, 2022 (contributed talk)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms
-        </div>
-        <div class="talk-meta">
-          21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021 (contributed talk)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Hayata Yamasaki</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking
-        </div>
-        <div class="talk-meta">
-          21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021 (contributed talk)
-        </div>
-        <div class="talk-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking
-        </div>
-        <div class="talk-meta">
-          16th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2021), University of Latvia, Riga, Latvia (Online), July 5–8, 2021 (contributed talk)
-        </div>
-        <div class="talk-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          Calculating nonadiabatic couplings by variational quantum eigensolvers
-        </div>
-        <div class="talk-meta">
-          Pacifichem 2021, Online, December 16–21, 2021 (poster)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2020</span>
-          Variational quantum algorithms for calculating nonadiabatic couplings
-        </div>
-        <div class="talk-meta">
-          15th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2020), Online, June 9–12, 2020 (poster)
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
-      </li>
-    </ul>
+    <nav class="cv-index" aria-label="Sections">
+      <a href="#talks-invited">Invited Talks</a>
+      <a href="#talks-contributed">Contributed Talks</a>
+      <a href="#talks-posters">Posters</a>
+      <a href="#talks-seminars">Seminars &amp; Lectures</a>
+      <a href="#talks-domestic">Domestic Conferences</a>
+      <a href="#awards">Awards &amp; Fellowship</a>
+    </nav>
 
-    <div class="talk-subheading">Seminars</div>
-    <ul class="talk-list">
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2025</span>
-          Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
-        </div>
-        <div class="talk-meta">ICEPP seminar, The University of Tokyo, October 9, 2025</div>
-        <div class="talk-authors">Shiro Tamiya</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes
-        </div>
-        <div class="talk-meta">QunaSys internal seminar, オンライン, 2024年12月13日</div>
-        <div class="talk-authors ja">田宮 志郎</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          Concatenate codes, save qubits
-        </div>
-        <div class="talk-meta">NTT seminar, NTT Musashino Research and Development Center, November 1, 2024</div>
-        <div class="talk-authors">Shiro Tamiya</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          Concatenate codes, save qubits
-        </div>
-        <div class="talk-meta">第64回 Q-LEAP 量子 AI セミナー, オンライン, 2024年7月16日</div>
-        <div class="talk-authors ja">田宮 志郎</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          低オーバーヘッド誤り耐性量子計算
-        </div>
-        <div class="talk-meta">QIH・MS6・Q-LEAP サマースクール 2024, サンライズ九十九里 (講師)</div>
-        <div class="talk-authors ja">田宮 志郎</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          量子 LDPC 符号と量子計算への応用
-        </div>
-        <div class="talk-meta">エクスパンダーグラフの新しい構成手法の確立とその応用 3, 九州大学, 2024/09/09–11 (招待講演)</div>
-        <div class="talk-authors ja">田宮 志郎</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2024</span>
-          Low-overhead fault-tolerant quantum computation
-        </div>
-        <div class="talk-meta">第35回量子情報関東 Student Chapter 研究会, 東京大学 本郷キャンパス, 2024年3月29日</div>
-        <div class="talk-authors ja">田宮 志郎</div>
-      </li>
-    </ul>
+    <section class="cv-group" id="talks-invited" aria-labelledby="talks-invited-h">
+      <h3 class="cv-heading" id="talks-invited-h">Invited Talks <span class="cv-count">3</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">Fault-tolerant quantum computation with polylogarithmic time and constant space overheads</div>
+            <div class="cv-venue">Quantum Error Correction Theory Workshop for Young Researchers, Nagoya University, Japan, December 17–19, 2025</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">量子 LDPC 符号と量子計算への応用</div>
+            <div class="cv-venue">エクスパンダーグラフの新しい構成手法の確立とその応用 3, 九州大学, 2024/09/09–11</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Stochastic Gradient Line Bayesian Optimization: Efficient Noise-Robust Optimization for Parameterized Quantum Circuits</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-venue">Quantum Information Processing and Quantum Machine Learning (QIP-QML 2022), IQOQI Vienna, Austrian Academy of Sciences, February 21 – March 11, 2022</div>
+          </div>
+        </li>
+      </ol>
+    </section>
 
-    <div class="talk-subheading">Domestic conferences</div>
-    <ul class="talk-list">
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2026</span>
-          定数空間・対数多項式時間オーバーヘッド誤り耐性量子計算
-        </div>
-        <div class="talk-meta">
-          <a href="https://jps2026a.gakkai-web.net/data/html/program01.html" target="_blank" rel="noopener noreferrer">日本物理学会 第81回年次大会 (2026年)</a>, 16aA108-1, 領域1 量子情報（理論）, 東京大学 駒場キャンパス, 2026年9月16日
-        </div>
-        <div class="talk-authors ja">田宮 志郎, 小芦 雅斗, 山崎 隼汰</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2023</span>
-          測定誘起相転移の体積則相におけるランダム量子回路の誤り訂正能力
-        </div>
-        <div class="talk-meta">日本物理学会 第78回年次大会, 16aB204, 東北大学, 2023年9月</div>
-        <div class="talk-authors ja">田宮 志郎, 中田 芳史</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2023</span>
-          ゼロ磁場ダイヤモンド NV 中心における弱結合核スピン検出・操作手法の研究
-        </div>
-        <div class="talk-meta">第18回ナノテク交流シンポジウム, 横浜国立大学, 2023年3月7日</div>
-        <div class="talk-authors ja">江川 直也, 田宮 志郎, 渡辺 幹成, 小坂 英男</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2022</span>
-          Decoupling approach に基づく低深度量子ランダム符号の性能評価
-        </div>
-        <div class="talk-meta">日本物理学会 第77回年次大会, 15pE11, オンライン, 2022年3月</div>
-        <div class="talk-authors ja">田宮 志郎, Andrew S. Darmawan, 山崎 隼汰, 中田 芳史</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          確率的勾配方向ベイズ最適化による変分量子アルゴリズムに必要な測定回数の削減
-        </div>
-        <div class="talk-meta">日本物理学会 第76回年次大会, 15aA1-7, オンライン, 2021年3月</div>
-        <div class="talk-authors ja">田宮 志郎, 山崎 隼汰</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2021</span>
-          確率的勾配方向ベイズ最適化に基づく変分量子アルゴリズムの測定回数の削減
-        </div>
-        <div class="talk-meta">量子情報春の学校2021, ポスター発表, オンライン開催, 2021年3月26日〜28日</div>
-        <div class="talk-authors ja">田宮 志郎, 山崎 隼汰</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2020</span>
-          NISQ 上での非断熱結合計算
-        </div>
-        <div class="talk-meta">日本物理学会 第75回年次大会, 17pK33-4, オンライン, 2020年3月</div>
-        <div class="talk-authors ja">田宮 志郎, 中川 裕也</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2019</span>
-          ダイヤモンド NV 中心による量子情報デバイスの実現に向けたハミルトニアンラーニング
-        </div>
-        <div class="talk-meta">第66回応用物理学会春季学術講演会, 9p-M111-6, 東京工業大学 大岡山キャンパス, 2019年3月9日</div>
-        <div class="talk-authors ja">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2019</span>
-          機械学習によるダイヤモンド NV 中心ハミルトニアン推定
-        </div>
-        <div class="talk-meta">第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日 (最優秀発表賞)</div>
-        <div class="talk-authors ja">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
-      </li>
-    </ul>
+    <section class="cv-group" id="talks-contributed" aria-labelledby="talks-contributed-h">
+      <h3 class="cv-heading" id="talks-contributed-h">Contributed Talks <span class="cv-count">9</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[9]</span>
+          <div class="cv-body">
+            <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
+            <div class="cv-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+            <div class="cv-venue">20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India, September 15–19, 2025<span class="cv-note cv-note--award">Best Paper Award</span></div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[8]</span>
+          <div class="cv-body">
+            <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
+            <div class="cv-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+            <div class="cv-venue">7th International Conference on Quantum Error Correction (QEC25), Connecticut, United States, August 11–15, 2025</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[7]</span>
+          <div class="cv-body">
+            <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
+            <div class="cv-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+            <div class="cv-venue">24th Asian Quantum Information Science Conference (AQIS 2024), Hokkaido University, Japan, August 26–30, 2024</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[6]</span>
+          <div class="cv-body">
+            <div class="cv-title">Quantum coding with random Clifford circuits</div>
+            <div class="cv-authors">Shiro Tamiya, Andrew S. Darmawan, Yoshifumi Nakata, Hayata Yamasaki</div>
+            <div class="cv-venue">QEC Workshop 2023, Yukawa Institute for Theoretical Physics (YITP), Kyoto University, Japan, March 20–31, 2023</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[5]</span>
+          <div class="cv-body">
+            <div class="cv-title">Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Optimizing Parameterized Quantum Circuits</div>
+            <div class="cv-authors">Hayata Yamasaki, Shiro Tamiya</div>
+            <div class="cv-venue">4th International Workshop on Quantum Resource Estimation (QRE 2022), New York, USA, June 18, 2022</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[4]</span>
+          <div class="cv-body">
+            <div class="cv-title">Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-venue">APS March Meeting 2022, Chicago, USA, March 14–18, 2022</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">Stochastic Gradient Line Bayesian Optimization: Reducing Measurement Shots in Variational Quantum Algorithms</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki</div>
+            <div class="cv-venue">21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking</div>
+            <div class="cv-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
+            <div class="cv-venue">21st Asian Quantum Information Science Conference (AQIS 2021), The University of Tokyo, Japan (Online), September 1–4, 2021</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Explicit constructions of exact unitary t-designs and applications to higher-order randomized benchmarking</div>
+            <div class="cv-authors">Yoshifumi Nakata, Da Zhao, Takayuki Okuda, Eiichi Bannai, Yasunari Suzuki, Shiro Tamiya, Kentaro Heya, Zhiguang Yan, Kun Zuo, Shuhei Tamate, Yutaka Tabuchi, Yasunobu Nakamura</div>
+            <div class="cv-venue">16th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2021), University of Latvia, Riga, Latvia (Online), July 5–8, 2021</div>
+          </div>
+        </li>
+      </ol>
+    </section>
 
-    <div class="talk-subheading" id="awards">Awards &amp; Fellowship</div>
-    <ul class="talk-list">
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2026</span>
-          若手ポスター賞 <span class="talk-main-en">/ Young Researcher Poster Award</span>
-        </div>
-        <div class="talk-meta">JST ムーンショット目標6 夏合宿 2026 / JST Moonshot Goal 6 Summer Camp 2026</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2025</span>
-          Best Paper Award
-        </div>
-        <div class="talk-meta">
-          20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India —
-          "Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes"
-        </div>
-        <div class="talk-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-        <div class="talk-links">
-          <a href="https://tqc.iaqi.org/2025/" class="news-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-globe"></i> TQC 2025</a>
-          <a href="https://arxiv.org/abs/2411.03683" class="news-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-file-pdf"></i> arXiv</a>
-        </div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2023</span>
-          JSPS Research Fellowship for Young Scientists (DC2)
-        </div>
-        <div class="talk-meta">日本学術振興会 特別研究員 (DC2), 2023年4月 – 2024年3月</div>
-      </li>
-      <li class="talk-item">
-        <div class="talk-main">
-          <span class="talk-year">2019</span>
-          最優秀発表賞 <span class="talk-main-en">/ Best Presentation Award</span>
-        </div>
-        <div class="talk-meta">第14回ナノテク交流シンポジウム, 横浜市立大学, 2019年3月 —「機械学習によるダイヤモンド NV 中心ハミルトニアン推定」</div>
-      </li>
-    </ul>
+    <section class="cv-group" id="talks-posters" aria-labelledby="talks-posters-h">
+      <h3 class="cv-heading" id="talks-posters-h">Posters <span class="cv-count">3</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">Degeneracy Cutting: A Local and Efficient Post-Processing for Belief Propagation Decoding of Quantum Low-Density Parity-Check Codes</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki, Kento Tsubouchi</div>
+            <div class="cv-venue">29th Annual Quantum Information Processing Conference 2026 (QIP2026), University of Latvia, Latvia, January 24–30, 2026</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">Calculating nonadiabatic couplings by variational quantum eigensolvers</div>
+            <div class="cv-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
+            <div class="cv-venue">Pacifichem 2021, Online, December 16–21, 2021</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Variational quantum algorithms for calculating nonadiabatic couplings</div>
+            <div class="cv-authors">Shiro Tamiya, Sho Koh, Yuya O. Nakagawa</div>
+            <div class="cv-venue">15th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2020), Online, June 9–12, 2020</div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cv-group" id="talks-seminars" aria-labelledby="talks-seminars-h">
+      <h3 class="cv-heading" id="talks-seminars-h">Seminars &amp; Lectures <span class="cv-count">6</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[6]</span>
+          <div class="cv-body">
+            <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
+            <div class="cv-venue">ICEPP seminar, The University of Tokyo, October 9, 2025</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[5]</span>
+          <div class="cv-body">
+            <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
+            <div class="cv-venue">QunaSys internal seminar, オンライン, 2024年12月13日</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[4]</span>
+          <div class="cv-body">
+            <div class="cv-title">Concatenate codes, save qubits</div>
+            <div class="cv-venue">NTT seminar, NTT Musashino Research and Development Center, November 1, 2024</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">Concatenate codes, save qubits</div>
+            <div class="cv-venue">第64回 Q-LEAP 量子 AI セミナー, オンライン, 2024年7月16日</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">低オーバーヘッド誤り耐性量子計算</div>
+            <div class="cv-venue">QIH・MS6・Q-LEAP サマースクール 2024, サンライズ九十九里<span class="cv-note">講師</span></div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">Low-overhead fault-tolerant quantum computation</div>
+            <div class="cv-venue">第35回量子情報関東 Student Chapter 研究会, 東京大学 本郷キャンパス, 2024年3月29日</div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cv-group" id="talks-domestic" aria-labelledby="talks-domestic-h">
+      <h3 class="cv-heading" id="talks-domestic-h">Domestic Conferences <span class="cv-count">9</span></h3>
+      <ol class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">[9]</span>
+          <div class="cv-body">
+            <div class="cv-title">定数空間・対数多項式時間オーバーヘッド誤り耐性量子計算</div>
+            <div class="cv-authors">田宮 志郎, 小芦 雅斗, 山崎 隼汰</div>
+            <div class="cv-venue"><a href="https://jps2026a.gakkai-web.net/data/html/program01.html" target="_blank" rel="noopener noreferrer">日本物理学会 第81回年次大会 (2026年)</a>, 16aA108-1, 領域1 量子情報（理論）, 東京大学 駒場キャンパス, 2026年9月16日</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[8]</span>
+          <div class="cv-body">
+            <div class="cv-title">測定誘起相転移の体積則相におけるランダム量子回路の誤り訂正能力</div>
+            <div class="cv-authors">田宮 志郎, 中田 芳史</div>
+            <div class="cv-venue">日本物理学会 第78回年次大会, 16aB204, 東北大学, 2023年9月</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[7]</span>
+          <div class="cv-body">
+            <div class="cv-title">ゼロ磁場ダイヤモンド NV 中心における弱結合核スピン検出・操作手法の研究</div>
+            <div class="cv-authors">江川 直也, 田宮 志郎, 渡辺 幹成, 小坂 英男</div>
+            <div class="cv-venue">第18回ナノテク交流シンポジウム, 横浜国立大学, 2023年3月7日</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[6]</span>
+          <div class="cv-body">
+            <div class="cv-title">Decoupling approach に基づく低深度量子ランダム符号の性能評価</div>
+            <div class="cv-authors">田宮 志郎, Andrew S. Darmawan, 山崎 隼汰, 中田 芳史</div>
+            <div class="cv-venue">日本物理学会 第77回年次大会, 15pE11, オンライン, 2022年3月</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[5]</span>
+          <div class="cv-body">
+            <div class="cv-title">確率的勾配方向ベイズ最適化による変分量子アルゴリズムに必要な測定回数の削減</div>
+            <div class="cv-authors">田宮 志郎, 山崎 隼汰</div>
+            <div class="cv-venue">日本物理学会 第76回年次大会, 15aA1-7, オンライン, 2021年3月</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[4]</span>
+          <div class="cv-body">
+            <div class="cv-title">確率的勾配方向ベイズ最適化に基づく変分量子アルゴリズムの測定回数の削減</div>
+            <div class="cv-authors">田宮 志郎, 山崎 隼汰</div>
+            <div class="cv-venue">量子情報春の学校2021, オンライン開催, 2021年3月26日〜28日<span class="cv-note">ポスター</span></div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[3]</span>
+          <div class="cv-body">
+            <div class="cv-title">NISQ 上での非断熱結合計算</div>
+            <div class="cv-authors">田宮 志郎, 中川 裕也</div>
+            <div class="cv-venue">日本物理学会 第75回年次大会, 17pK33-4, オンライン, 2020年3月</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[2]</span>
+          <div class="cv-body">
+            <div class="cv-title">ダイヤモンド NV 中心による量子情報デバイスの実現に向けたハミルトニアンラーニング</div>
+            <div class="cv-authors">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
+            <div class="cv-venue">第66回応用物理学会春季学術講演会, 9p-M111-6, 東京工業大学 大岡山キャンパス, 2019年3月9日</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">[1]</span>
+          <div class="cv-body">
+            <div class="cv-title">機械学習によるダイヤモンド NV 中心ハミルトニアン推定</div>
+            <div class="cv-authors">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
+            <div class="cv-venue">第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日<span class="cv-note cv-note--award">最優秀発表賞</span></div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="cv-group" id="awards" aria-labelledby="awards-h">
+      <h3 class="cv-heading" id="awards-h">Awards &amp; Fellowship <span class="cv-count">4</span></h3>
+      <ul class="cv-list">
+        <li class="cv-item">
+          <span class="cv-num">2026</span>
+          <div class="cv-body">
+            <div class="cv-title">若手ポスター賞 <span class="cv-title-en">/ Young Researcher Poster Award</span></div>
+            <div class="cv-venue">JST ムーンショット目標6 夏合宿 2026 / JST Moonshot Goal 6 Summer Camp 2026</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">2025</span>
+          <div class="cv-body">
+            <div class="cv-title">Best Paper Award</div>
+            <div class="cv-venue"><a href="https://tqc.iaqi.org/2025/" target="_blank" rel="noopener noreferrer">20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025)</a>, Bengaluru, India</div>
+            <div class="cv-work"><a href="https://arxiv.org/abs/2411.03683" target="_blank" rel="noopener noreferrer">“Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes”</a> — Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">2023</span>
+          <div class="cv-body">
+            <div class="cv-title">JSPS Research Fellowship for Young Scientists (DC2)</div>
+            <div class="cv-venue">日本学術振興会 特別研究員 (DC2), 2023年4月 – 2024年3月</div>
+          </div>
+        </li>
+        <li class="cv-item">
+          <span class="cv-num">2019</span>
+          <div class="cv-body">
+            <div class="cv-title">最優秀発表賞 <span class="cv-title-en">/ Best Presentation Award</span></div>
+            <div class="cv-venue">第14回ナノテク交流シンポジウム, 横浜市立大学, 2019年3月</div>
+            <div class="cv-work">「機械学習によるダイヤモンド NV 中心ハミルトニアン推定」</div>
+          </div>
+        </li>
+      </ul>
+    </section>
   </section>
 
   <!-- CONTACT -->
@@ -2348,9 +2294,21 @@
     var panels = document.querySelectorAll('.tab-panel');
     var validTabs = Array.from(tabs).map(function (t) { return t.dataset.tab; });
 
+    /* a hash is either a tab name or the id of a section inside a tab */
+    function resolve(name) {
+      if (validTabs.indexOf(name) !== -1) return { tab: name, target: null };
+      var el = name ? document.getElementById(name) : null;
+      var panel = el && el.closest ? el.closest('.tab-panel') : null;
+      if (panel && validTabs.indexOf(panel.dataset.panel) !== -1) {
+        return { tab: panel.dataset.panel, target: el };
+      }
+      return { tab: 'home', target: null };
+    }
+
     function showTab(name, opts) {
       opts = opts || {};
-      if (validTabs.indexOf(name) === -1) name = 'home';
+      var r = resolve(name);
+      name = r.tab;
 
       tabs.forEach(function (t) {
         var active = t.dataset.tab === name;
@@ -2369,7 +2327,10 @@
           location.hash = name;
         }
       }
-      if (!opts.suppressScroll) {
+      if (r.target) {
+        var target = r.target;
+        requestAnimationFrame(function () { target.scrollIntoView({ block: 'start' }); });
+      } else if (!opts.suppressScroll) {
         window.scrollTo({ top: 0, behavior: 'auto' });
       }
     }
