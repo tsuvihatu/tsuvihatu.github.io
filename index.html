@@ -627,28 +627,27 @@
     /* ===============================
        Structured lists: Publications / Talks / Awards
        (numbered like a bibliography, newest first;
-        the index chips jump to each group)
+        the underlined links at the top jump to each group)
     ================================ */
     .cv-index {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
       margin: -20px 0 56px;
     }
     .cv-index a {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 6px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      padding: 2px 0;
+      font-size: 0.92rem;
+      line-height: 1.5;
       color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.15s ease, border-color 0.15s ease;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-decoration-color: var(--text-faint);
+      text-underline-offset: 4px;
+      transition: color 0.15s ease, text-decoration-color 0.15s ease;
     }
-    .cv-index a:hover { color: var(--text); border-color: var(--text-muted); text-decoration: none; }
+    .cv-index a:hover { color: var(--text); text-decoration-color: currentColor; }
     .cv-count {
       font-family: 'Inter', monospace;
       font-variant-numeric: tabular-nums;
@@ -791,6 +790,142 @@
     }
 
     /* ===============================
+       Lecture (content in Japanese only)
+    ================================ */
+    .section-title--ja,
+    .cv-heading--ja {
+      font-family: 'Shippori Mincho', "Yu Mincho", serif;
+      letter-spacing: 0.06em;
+    }
+    .section-title--ja { font-size: 1.75rem; }
+    .cv-heading--ja { font-size: 1.2rem; }
+
+    /* Japanese text breaks only at punctuation, spaces and <wbr> hints */
+    #panel-lecture { word-break: keep-all; overflow-wrap: break-word; }
+
+    .lec-head { margin-bottom: 56px; }
+    .lec-term {
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      color: var(--text-faint);
+    }
+    .lec-sep { margin: 0 10px; opacity: 0.6; }
+    .lec-title {
+      margin: 8px 0 0;
+      font-family: 'Shippori Mincho', "Yu Mincho", serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: 0.06em;
+      color: var(--text);
+    }
+    .lec-sub {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    .lec-info { margin: 0; }
+    .lec-info > div {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 0 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .lec-info > div:last-child { border-bottom: none; }
+    .lec-info dt {
+      padding-top: 2px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .lec-info dd {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .lec-aside {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .lec-note {
+      margin: 16px 0 4px;
+      font-size: 0.86rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+    .lec-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .lec-table th,
+    .lec-table td {
+      padding: 16px 24px 16px 0;
+      text-align: left;
+      vertical-align: baseline;
+      font-weight: 400;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .lec-table th:last-child,
+    .lec-table td:last-child { padding-right: 0; }
+    .lec-table thead th {
+      padding-top: 14px;
+      padding-bottom: 10px;
+      vertical-align: bottom;
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+    .lec-table thead small {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-faint);
+    }
+    .lec-table tbody tr:last-child > * { border-bottom: none; }
+    .lec-topic {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+    }
+    .lec-no {
+      flex: none;
+      width: 44px;
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-faint);
+      white-space: nowrap;
+    }
+    .lec-name {
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .lec-table .lec-date {
+      width: 128px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .lec-table tbody .lec-date {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .lec-reserve .lec-name { font-weight: 400; color: var(--text-muted); }
+    .lec-table tbody .lec-reserve .lec-date { color: var(--text-muted); }
+    .lec-common {
+      margin-left: 8px;
+      font-size: 0.78rem;
+      color: var(--text-faint);
+    }
+
+    /* ===============================
        Contact
     ================================ */
     .contact-row {
@@ -896,6 +1031,25 @@
       .news-item { grid-template-columns: 1fr; gap: 6px; }
       .section-header { flex-direction: column; align-items: flex-start; gap: 6px; }
       .footer { flex-direction: column; text-align: center; }
+      .lec-head { margin-bottom: 44px; }
+      .lec-info > div { grid-template-columns: 76px minmax(0, 1fr); gap: 0 12px; }
+    }
+
+    @media (max-width: 640px) {
+      .lec-topic { flex-direction: column; gap: 2px; }
+      .lec-no { width: auto; }
+      .lec-table thead .lec-no { display: none; }
+      .lec-table th, .lec-table td { padding-right: 14px; }
+      .lec-table .lec-date { width: auto; }
+      .lec-table tbody .lec-date { font-size: 0.86rem; }
+      .lec-name { font-size: 0.94rem; }
+    }
+
+    /* five tabs on a phone: tighter spacing so that all of them fit */
+    @media (max-width: 560px) {
+      .tab-nav { gap: 0; justify-content: space-between; }
+      .tab-link { padding: 8px 8px; }
+      .tab-link.active::after { left: 8px; right: 8px; }
     }
 
     /* Reduce motion */
@@ -920,6 +1074,7 @@
       <button class="tab-link" data-tab="home"         role="tab">Home</button>
       <button class="tab-link" data-tab="publications" role="tab">Publications</button>
       <button class="tab-link" data-tab="talks"        role="tab">Talks</button>
+      <button class="tab-link" data-tab="lecture"      role="tab">Lecture</button>
       <button class="tab-link" data-tab="contact"      role="tab">Contact</button>
     </nav>
     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
@@ -1922,6 +2077,7 @@
           <span class="cv-num">[1]</span>
           <div class="cv-body">
             <div class="cv-title">Stochastic Gradient Line Bayesian Optimization: Efficient Noise-Robust Optimization for Parameterized Quantum Circuits</div>
+            <div class="cv-authors">Shiro Tamiya, Hayata Yamasaki</div>
             <div class="cv-venue">Quantum Information Processing and Quantum Machine Learning (QIP-QML 2022), IQOQI Vienna, Austrian Academy of Sciences, February 21 – March 11, 2022</div>
           </div>
         </li>
@@ -1936,7 +2092,7 @@
           <div class="cv-body">
             <div class="cv-title">Polylog-time- and constant-space-overhead fault-tolerant quantum computation with quantum low-density parity-check codes</div>
             <div class="cv-authors">Shiro Tamiya, Masato Koashi, Hayata Yamasaki</div>
-            <div class="cv-venue">20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India, September 15–19, 2025</div>
+            <div class="cv-venue">20th Conference on the Theory of Quantum Computation, Communication and Cryptography (TQC 2025), Bengaluru, India, September 15–19, 2025<span class="cv-note cv-note--award">Best Paper Award</span></div>
           </div>
         </li>
         <li class="cv-item">
@@ -2156,7 +2312,7 @@
           <div class="cv-body">
             <div class="cv-title">機械学習によるダイヤモンド NV 中心ハミルトニアン推定</div>
             <div class="cv-authors">田宮 志郎, 倉見谷 航洋, 古賀 悠太, 石坂 泰一, 松田 一泰, 小坂 英男</div>
-            <div class="cv-venue">第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日</div>
+            <div class="cv-venue">第14回ナノテク交流シンポジウム, N24, 横浜市立大学 金沢八景キャンパス, 2019年3月8日<span class="cv-note cv-note--award">最優秀発表賞</span></div>
           </div>
         </li>
       </ol>
@@ -2197,6 +2353,89 @@
         </li>
       </ul>
     </section>
+  </section>
+
+  <!-- LECTURE (日本語のみ) -->
+  <section class="tab-panel" id="panel-lecture" data-panel="lecture" role="tabpanel">
+    <div class="section-header">
+      <h2 class="section-title section-title--ja">講義</h2>
+    </div>
+
+    <article class="lec-course" aria-labelledby="lec-2026-title">
+      <header class="lec-head">
+        <div class="lec-term">2026年度 A1A2ターム<span class="lec-sep">/</span>物理工学科 3年</div>
+        <h3 class="lec-title" id="lec-2026-title">物理工学演習第二</h3>
+        <div class="lec-sub">量子力学第三</div>
+      </header>
+
+      <section class="cv-group" id="lecture-info" aria-labelledby="lecture-info-h">
+        <h4 class="cv-heading cv-heading--ja" id="lecture-info-h">基本情報</h4>
+        <dl class="lec-info">
+          <div>
+            <dt>時間</dt>
+            <dd>木曜 14:00–16:00<span class="lec-aside">2026年10月8日 – 2027年1月14日</span></dd>
+          </div>
+          <div>
+            <dt>形式</dt>
+            <dd>対面 + Zoom による<wbr>ハイブリッド開催</dd>
+          </div>
+          <div>
+            <dt>成績評価</dt>
+            <dd>レポート（全6回）および<wbr>演習問題の<wbr>解答・解説</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="cv-group" id="lecture-schedule" aria-labelledby="lecture-schedule-h">
+        <h4 class="cv-heading cv-heading--ja" id="lecture-schedule-h">授業内容</h4>
+        <p class="lec-note">学籍番号の下一桁が偶数の学生は前半クラス、奇数の学生は後半クラスです。両クラスとも同じ内容を扱います。</p>
+        <table class="lec-table">
+          <thead>
+            <tr>
+              <th scope="col"><div class="lec-topic"><span class="lec-no">回</span><span>タイトル</span></div></th>
+              <th scope="col" class="lec-date">前半クラス<small>偶数</small></th>
+              <th scope="col" class="lec-date">後半クラス<small>奇数</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第1回</span><span class="lec-name">散乱と摂動論の基礎</span></div></th>
+              <td class="lec-date"><time datetime="2026-10-08">10月8日</time></td>
+              <td class="lec-date"><time datetime="2026-10-15">10月15日</time></td>
+            </tr>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第2回</span><span class="lec-name">散乱理論</span></div></th>
+              <td class="lec-date"><time datetime="2026-10-22">10月22日</time></td>
+              <td class="lec-date"><time datetime="2026-10-29">10月29日</time></td>
+            </tr>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第3回</span><span class="lec-name">散乱理論と特殊相対論</span></div></th>
+              <td class="lec-date"><time datetime="2026-11-05">11月5日</time></td>
+              <td class="lec-date"><time datetime="2026-11-12">11月12日</time></td>
+            </tr>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第4回</span><span class="lec-name">相対論的量子力学</span></div></th>
+              <td class="lec-date"><time datetime="2026-11-19">11月19日</time></td>
+              <td class="lec-date"><time datetime="2026-12-03">12月3日</time></td>
+            </tr>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第5回</span><span class="lec-name">第二量子化</span></div></th>
+              <td class="lec-date"><time datetime="2026-12-10">12月10日</time></td>
+              <td class="lec-date"><time datetime="2026-12-17">12月17日</time></td>
+            </tr>
+            <tr>
+              <th scope="row"><div class="lec-topic"><span class="lec-no">第6回</span><span class="lec-name">電磁場の量子化</span></div></th>
+              <td class="lec-date"><time datetime="2026-12-24">12月24日</time></td>
+              <td class="lec-date"><time datetime="2027-01-07">1月7日</time></td>
+            </tr>
+            <tr class="lec-reserve">
+              <th scope="row"><div class="lec-topic"><span class="lec-no"></span><span class="lec-name">予備日</span></div></th>
+              <td class="lec-date" colspan="2"><time datetime="2027-01-14">1月14日</time> <span class="lec-common">両クラス共通</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </article>
   </section>
 
   <!-- CONTACT -->
