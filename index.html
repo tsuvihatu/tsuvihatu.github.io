@@ -790,7 +790,7 @@
     }
 
     /* ===============================
-       Lecture (content in Japanese only)
+       Teaching (content in Japanese only)
     ================================ */
     .section-title--ja,
     .cv-heading--ja {
@@ -801,7 +801,7 @@
     .cv-heading--ja { font-size: 1.2rem; }
 
     /* Japanese text breaks only at punctuation, spaces and <wbr> hints */
-    #panel-lecture { word-break: keep-all; overflow-wrap: break-word; }
+    #panel-teaching { word-break: keep-all; overflow-wrap: break-word; }
 
     .lec-head { margin-bottom: 56px; }
     .lec-term {
@@ -1048,9 +1048,22 @@
     /* five tabs on a phone: tighter spacing so that all of them fit */
     @media (max-width: 560px) {
       .tab-nav { gap: 0; justify-content: space-between; }
-      .tab-link { padding: 8px 8px; }
-      .tab-link.active::after { left: 8px; right: 8px; }
+      .tab-link { padding: 8px 7px; }
+      .tab-link.active::after { left: 7px; right: 7px; }
     }
+    @media (max-width: 380px) {
+      .tab-link { padding: 8px 5px; font-size: 0.82rem; }
+      .tab-link.active::after { left: 5px; right: 5px; }
+    }
+
+    /* phones: a tab changed by swiping slides in from the side it came from */
+    @media (max-width: 900px) {
+      .shell { overflow-x: clip; }
+      .tab-panel.swipe-from-right { animation: tab-in-right 0.26s ease-out; }
+      .tab-panel.swipe-from-left  { animation: tab-in-left 0.26s ease-out; }
+    }
+    @keyframes tab-in-right { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: none; } }
+    @keyframes tab-in-left  { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: none; } }
 
     /* Reduce motion */
     @media (prefers-reduced-motion: reduce) {
@@ -1074,7 +1087,7 @@
       <button class="tab-link" data-tab="home"         role="tab">Home</button>
       <button class="tab-link" data-tab="publications" role="tab">Publications</button>
       <button class="tab-link" data-tab="talks"        role="tab">Talks</button>
-      <button class="tab-link" data-tab="lecture"      role="tab">Lecture</button>
+      <button class="tab-link" data-tab="teaching"     role="tab">Teaching</button>
       <button class="tab-link" data-tab="contact"      role="tab">Contact</button>
     </nav>
     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
@@ -2355,8 +2368,8 @@
     </section>
   </section>
 
-  <!-- LECTURE (日本語のみ) -->
-  <section class="tab-panel" id="panel-lecture" data-panel="lecture" role="tabpanel">
+  <!-- TEACHING (日本語のみ) -->
+  <section class="tab-panel" id="panel-teaching" data-panel="teaching" role="tabpanel">
     <div class="section-header">
       <h2 class="section-title section-title--ja">講義</h2>
     </div>
@@ -2368,12 +2381,16 @@
         <div class="lec-sub">量子力学第三</div>
       </header>
 
-      <section class="cv-group" id="lecture-info" aria-labelledby="lecture-info-h">
-        <h4 class="cv-heading cv-heading--ja" id="lecture-info-h">基本情報</h4>
+      <section class="cv-group" id="teaching-info" aria-labelledby="teaching-info-h">
+        <h4 class="cv-heading cv-heading--ja" id="teaching-info-h">基本情報</h4>
         <dl class="lec-info">
           <div>
             <dt>時間</dt>
             <dd>木曜 14:00–16:00<span class="lec-aside">2026年10月8日 – 2027年1月14日</span></dd>
+          </div>
+          <div>
+            <dt>場所</dt>
+            <dd>工学部6号館63号 セミナーC</dd>
           </div>
           <div>
             <dt>形式</dt>
@@ -2386,8 +2403,8 @@
         </dl>
       </section>
 
-      <section class="cv-group" id="lecture-schedule" aria-labelledby="lecture-schedule-h">
-        <h4 class="cv-heading cv-heading--ja" id="lecture-schedule-h">授業内容</h4>
+      <section class="cv-group" id="teaching-schedule" aria-labelledby="teaching-schedule-h">
+        <h4 class="cv-heading cv-heading--ja" id="teaching-schedule-h">授業内容</h4>
         <p class="lec-note">学籍番号の下一桁が偶数の学生は前半クラス、奇数の学生は後半クラスです。両クラスとも同じ内容を扱います。</p>
         <table class="lec-table">
           <thead>
@@ -2526,6 +2543,7 @@
 
     /* a hash is either a tab name or the id of a section inside a tab */
     function resolve(name) {
+      if (name === 'lecture') name = 'teaching';   /* old links to the renamed tab */
       if (validTabs.indexOf(name) !== -1) return { tab: name, target: null };
       var el = name ? document.getElementById(name) : null;
       var panel = el && el.closest ? el.closest('.tab-panel') : null;
@@ -2548,7 +2566,20 @@
       panels.forEach(function (p) {
         var active = p.dataset.panel === name;
         p.classList.toggle('active', active);
+        p.classList.remove('swipe-from-left', 'swipe-from-right');
+        if (active && opts.from) {
+          void p.offsetWidth;                       /* restart the slide-in */
+          p.classList.add('swipe-from-' + opts.from);
+        }
       });
+
+      /* narrow phones: keep the active tab visible in the tab bar */
+      var nav = document.querySelector('.tab-nav');
+      var btn = document.querySelector('.tab-link.active');
+      if (nav && btn && nav.scrollWidth > nav.clientWidth) {
+        var nr = nav.getBoundingClientRect(), br = btn.getBoundingClientRect();
+        nav.scrollLeft += (br.left + br.width / 2) - (nr.left + nr.width / 2);
+      }
 
       if (!opts.suppressHash) {
         if (history.replaceState) {
@@ -2583,6 +2614,39 @@
       var name = (location.hash || '').replace('#', '');
       if (name) showTab(name, { suppressHash: true });
     });
+
+    /* phones: swipe sideways to move to the next / previous tab */
+    var narrow = window.matchMedia ? window.matchMedia('(max-width: 900px)') : null;
+    var sx = null, sy = 0, st = 0;
+    function scrollsSideways(el) {
+      for (; el && el.nodeType === 1 && el !== document.body; el = el.parentElement) {
+        var ox = getComputedStyle(el).overflowX;
+        if ((ox === 'auto' || ox === 'scroll') && el.scrollWidth > el.clientWidth + 1) return true;
+      }
+      return false;
+    }
+    document.addEventListener('touchstart', function (e) {
+      sx = null;
+      if (!narrow || !narrow.matches || e.touches.length !== 1) return;
+      if (window.visualViewport && window.visualViewport.scale > 1.01) return;  /* zoomed in: a swipe pans */
+      var t = e.touches[0];
+      if (t.clientX < 24 || t.clientX > window.innerWidth - 24) return;         /* edge swipes belong to the browser */
+      if (scrollsSideways(e.target)) return;                                     /* wide figures scroll instead */
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+    }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      sx = null;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < 2 * Math.abs(dy) || Date.now() - st > 800) return;
+      if (window.getSelection && String(window.getSelection())) return;          /* selecting text */
+      var current = document.querySelector('.tab-panel.active');
+      var i = current ? validTabs.indexOf(current.dataset.panel) : -1;
+      var j = i + (dx < 0 ? 1 : -1);
+      if (i < 0 || j < 0 || j >= validTabs.length) return;
+      showTab(validTabs[j], { from: dx < 0 ? 'right' : 'left' });
+    }, { passive: true });
+    document.addEventListener('touchcancel', function () { sx = null; }, { passive: true });
 
     var initial = (location.hash || '').replace('#', '') || 'home';
     showTab(initial, { suppressHash: true, suppressScroll: true });
